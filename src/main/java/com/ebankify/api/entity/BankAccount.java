@@ -32,8 +32,11 @@ public class BankAccount {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "bankAccount")
-    private List<Transaction> transactions;
+    @OneToMany(mappedBy = "accountFrom")
+    private List<Transaction> transactionsFrom;
+
+    @OneToMany(mappedBy = "accountTo")
+    private List<Transaction> transactionsTo;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
