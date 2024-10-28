@@ -26,4 +26,8 @@ public class Invoice {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private InvoiceStatus status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

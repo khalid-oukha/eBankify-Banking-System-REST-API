@@ -31,7 +31,12 @@ public class Transaction {
 
     private LocalDate date;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_from_id")
     private BankAccount accountFrom;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_to_id")
     private BankAccount accountTo;
 
     private double fee;

@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,6 +29,14 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
-
     private int age;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<BankAccount> accounts;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Loan> loans;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Invoice> invoices;
 }
