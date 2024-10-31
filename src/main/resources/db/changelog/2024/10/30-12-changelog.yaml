@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1730299468538-12
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: invoices
+            constraintName: FK_INVOICES_ON_USER
+            referencedColumnNames: id
+            referencedTableName: users
+
