@@ -13,7 +13,7 @@ spring:
   # JPA / Hibernate Configuration
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
 
 # Liquibase Configuration

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -21,31 +23,45 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<UserResponseDTO> CreateUser(UserRequestDTO userRequestDTO) throws UserAlreadyExistsException {
+    public UserResponseDTO createUser(UserRequestDTO userRequestDTO) throws UserAlreadyExistsException {
         if (userRepository.existsByEmail(userRequestDTO.email())) {
             throw new UserAlreadyExistsException("User with email " + userRequestDTO.email() + " already exists");
         }
 
         User savedUser = userRepository.save(userRequestDTO.toUser());
-
-        UserResponseDTO responseDTO = UserResponseDTO.fromUser(savedUser);
-
-        return ApiResponse.created("/users/" + savedUser.getId(), responseDTO);
-    }
-
-
-    @Override
-    public ResponseEntity<UserResponseDTO> GetUserById(Long userId) throws UserNotFoundException {
-        return null;
+        return UserResponseDTO.fromUser(savedUser);
     }
 
     @Override
-    public ResponseEntity<UserResponseDTO> UpdateUser(Long userId, UserRequestDTO userRequestDTO) throws UserNotFoundException {
-        return null;
+    public UserResponseDTO getUserById(Long userId) throws UserNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
+        return UserResponseDTO.fromUser(user);
     }
 
     @Override
-    public ResponseEntity<UserResponseDTO> DeleteUser(Long userId) throws UserNotFoundException {
-        return null;
+    public UserResponseDTO updateUser(Long userId, UserRequestDTO userRequestDTO) throws UserNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
+
+        user.setUsername(userRequestDTO.username());
+        user.setEmail(userRequestDTO.email());
+        user.setPassword(userRequestDTO.password());
+        user.setAge(userRequestDTO.age());
+        user.setRole(userRequestDTO.role());
+
+        User updatedUser = userRepository.save(user);
+        return UserResponseDTO.fromUser(updatedUser);
+    }
+
+    @Override
+    public void deleteUser(Long userId) throws UserNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
+        userRepository.delete(user);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }

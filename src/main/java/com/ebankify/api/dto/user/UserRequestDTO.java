@@ -2,11 +2,7 @@ package com.ebankify.api.dto.user;
 
 import com.ebankify.api.entity.User;
 import com.ebankify.api.enums.Role;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
+import jakarta.validation.constraints.*;
 
 public record UserRequestDTO(
 
@@ -23,7 +19,8 @@ public record UserRequestDTO(
         String password,
 
         @NotNull(message = "Age is required")
-        @Size(min = 18, max = 100, message = "Age must be between 18 and 100")
+        @Min(value = 18, message = "Age must be at least 18")
+        @Max(value = 100, message = "Age must be at most 100")
         Integer age,
 
         @NotNull(message = "Role is required")
