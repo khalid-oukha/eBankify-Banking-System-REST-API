@@ -2,6 +2,7 @@ package com.ebankify.api.auth;
 
 import com.ebankify.api.config.JwtService;
 import com.ebankify.api.entity.User;
+import com.ebankify.api.exception.user.UserAlreadyExistsException;
 import com.ebankify.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +21,10 @@ public class AuthenticationService {
 
 
         public AuthenticationResponse register(RegisterRequest request) {
+            if (repository.existsByEmail(request.getEmail())) {
+                throw new UserAlreadyExistsException("User with email " + request.getEmail() + " already exists");
+            }
+
             var user = User.builder()
                     .username(request.getUsername())
                     .email(request.getEmail())
