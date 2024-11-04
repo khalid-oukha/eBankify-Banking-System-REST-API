@@ -1,7 +1,10 @@
 package com.ebankify.api.mapper.bankAccount;
 
-import com.ebankify.api.dto.bankAccount.BankAccountRequestDTO;
+import com.ebankify.api.dto.bankAccount.BankAccountResponseDto;
+import com.ebankify.api.dto.bankAccount.UserBankAccountRequestDTO;
+import com.ebankify.api.dto.user.UserRequestDTO;
 import com.ebankify.api.entity.BankAccount;
+import com.ebankify.api.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -9,7 +12,11 @@ import org.mapstruct.factory.Mappers;
 public interface BankAccountMapper {
     BankAccountMapper INSTANCE = Mappers.getMapper(BankAccountMapper.class);
 
-    BankAccount toEntity(BankAccountRequestDTO dto);
+    BankAccount toBankAccount(UserBankAccountRequestDTO dto);
 
-    BankAccountRequestDTO toDto(BankAccount entity);
+    User toUser(UserBankAccountRequestDTO dto);
+
+    UserRequestDTO toUserRequestDTO(UserBankAccountRequestDTO dto);
+
+    BankAccountResponseDto toResponseDto(BankAccount bankAccount, User user);
 }

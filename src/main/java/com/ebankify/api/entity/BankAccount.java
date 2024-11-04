@@ -26,6 +26,7 @@ public class BankAccount {
     @Column(name = "account_number", nullable = false, unique = true, updatable = false)
     private UUID accountNumber;
 
+    @Column(name = "balance", nullable = false)
     private double balance;
 
     @Enumerated(EnumType.STRING)
@@ -52,7 +53,12 @@ public class BankAccount {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.accountNumber = UUID.randomUUID();
     }
 
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
 }
