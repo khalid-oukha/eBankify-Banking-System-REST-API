@@ -25,12 +25,12 @@ public class BankAccount {
 
     @Column(name = "account_number", nullable = false, unique = true, updatable = false)
     private UUID accountNumber;
-    
+
     private double balance;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AccountStatus status;
+    private AccountStatus status = AccountStatus.ACTIVE;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

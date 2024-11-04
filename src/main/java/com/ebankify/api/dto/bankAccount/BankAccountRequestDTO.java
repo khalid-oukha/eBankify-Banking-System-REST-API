@@ -1,11 +1,9 @@
 package com.ebankify.api.dto.bankAccount;
 
+import jakarta.validation.constraints.NotNull;
+
 public record BankAccountRequestDTO(
-        
-        String accountNumber,
-        String accountType,
-        String bankName,
-        String branchName,
-        String ifscCode
+        @NotNull(message = "Account type is required")
+        String accountType
 ) {
 }
