@@ -1,0 +1,32 @@
+databaseChangeLog:
+
+  - include:
+      file: db/changelog/2024/10/30-01-changelog.yaml
+  - include:
+        file: db/changelog/2024/10/30-02-changelog.yaml
+  - include:
+        file: db/changelog/2024/10/30-03-changelog.yaml
+  - include:
+        file: db/changelog/2024/10/30-04-changelog.yaml
+  - include:
+      file: db/changelog/2024/10/30-05-changelog.yaml
+  - include:
+      file: db/changelog/2024/10/30-06-changelog.yaml
+  - include:
+      file: db/changelog/2024/10/30-07-changelog.yaml
+  - include:
+      file: db/changelog/2024/10/30-08-changelog.yaml
+  - include:
+      file: db/changelog/2024/10/30-09-changelog.yaml
+  - include:
+      file: db/changelog/2024/10/30-10-changelog.yaml
+  - include:
+      file: db/changelog/2024/10/30-11-changelog.yaml
+  - include:
+      file: db/changelog/2024/10/30-12-changelog.yaml
+  - include:
+      file: db/changelog/2024/10/30-13-changelog.yaml
+  - include:
+      file: db/changelog/2024/10/30-14-changelog.yaml
+  - include:
+      file: db/changelog/2024/10/30-15-changelog.yaml

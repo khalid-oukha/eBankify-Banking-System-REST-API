@@ -1,0 +1,21 @@
+# Spring Boot Application Name
+spring:
+  application:
+    name: eBankify
+
+  # PostgreSQL Database Configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ebankify_db
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+  # JPA / Hibernate Configuration
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+# Liquibase Configuration
+liquibase:
+  change-log: classpath:db/changelog/db.changelog-master.yaml
