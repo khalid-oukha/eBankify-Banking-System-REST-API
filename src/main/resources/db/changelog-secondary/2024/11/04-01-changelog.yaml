@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1730744388118-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 50
+            sequenceName: bank_accounts_seq
+            startValue: 1
+  - changeSet:
+      id: 1730744388118-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createSequence:
+            incrementBy: 50
+            sequenceName: invoices_seq
+            startValue: 1
+

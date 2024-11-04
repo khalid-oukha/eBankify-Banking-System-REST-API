@@ -2,10 +2,7 @@ package com.ebankify.api.entity;
 
 import com.ebankify.api.enums.InvoiceStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,9 +11,13 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Data
 @Entity
-@Table(name = "invoices")
+@Table(name = "invoices", indexes = {
+        @Index(name = "idx_invoice_id", columnList = "id")
+})
 public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

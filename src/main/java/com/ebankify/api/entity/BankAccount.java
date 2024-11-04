@@ -2,26 +2,30 @@ package com.ebankify.api.entity;
 
 import com.ebankify.api.enums.AccountStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Data
 @Entity
-@Table(name = "bank_accounts")
+@Table(name = "bank_accounts", indexes = {
+        @Index(name = "idx_bankaccount_id", columnList = "id, account_number")
+})
 public class BankAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String accountNumber;
+    @Column(name = "account_number", nullable = false, unique = true, updatable = false)
+    private UUID accountNumber;
+    
     private double balance;
 
     @Enumerated(EnumType.STRING)
