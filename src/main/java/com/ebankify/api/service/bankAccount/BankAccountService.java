@@ -5,6 +5,7 @@ import com.ebankify.api.web.dto.bankAccount.BankAccountResponseDto;
 import com.ebankify.api.web.dto.bankAccount.UserBankAccountRequestDTO;
 import com.ebankify.api.web.dto.user.UserRequestDTO;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface BankAccountService {
@@ -15,7 +16,7 @@ public interface BankAccountService {
 
     BankAccountResponseDto createBankAccountExistedUser(Long userId);
 
-    BankAccountResponseDto getBankAccountsByUserId(Long userId);
+    List<BankAccountResponseDto> getBankAccountsByUserId(Long userId);
 
     BankAccountResponseDto getBankAccountByAccountNumber(UUID accountNumber);
 

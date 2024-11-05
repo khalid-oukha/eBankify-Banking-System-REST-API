@@ -5,6 +5,7 @@ import com.ebankify.api.entity.User;
 import com.ebankify.api.entity.enums.AccountStatus;
 import com.ebankify.api.repository.BankAccountRepository;
 import com.ebankify.api.service.user.UserService;
+import com.ebankify.api.util.UserUtils;
 import com.ebankify.api.web.dto.bankAccount.BankAccountResponseDto;
 import com.ebankify.api.web.dto.bankAccount.UserBankAccountRequestDTO;
 import com.ebankify.api.web.dto.user.UserRequestDTO;
@@ -12,6 +13,7 @@ import com.ebankify.api.web.mapper.bankAccount.BankAccountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -54,8 +56,11 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public BankAccountResponseDto getBankAccountsByUserId(Long userId) {
-
+    public List<BankAccountResponseDto> getBankAccountsByUserId(Long userId) {
+        UserUtils.validateUserExists(userId);
+        return bankAccountRepository.findAllByUserId(userId).stream()
+                .map(bankAccount -> BankAccountResponseDto.fromBankAccountAndUser(bankAccount, bankAccount.getUser()))
+                .toList();
     }
 
     @Override

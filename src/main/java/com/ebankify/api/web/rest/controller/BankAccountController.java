@@ -2,6 +2,7 @@ package com.ebankify.api.web.rest.controller;
 
 import com.ebankify.api.commons.ApiResponse;
 import com.ebankify.api.entity.User;
+import com.ebankify.api.entity.enums.Role;
 import com.ebankify.api.exception.user.UserAlreadyExistsException;
 import com.ebankify.api.service.bankAccount.BankAccountService;
 import com.ebankify.api.util.UserUtils;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -50,6 +53,22 @@ public class BankAccountController {
         User currentUser = UserUtils.getCurrentUser();
         BankAccountResponseDto createdBankAccount = bankAccountService.createBankAccount(currentUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBankAccount);
+    }
+
+    @GetMapping("/admin/bank-accounts/{userId}")
+    public ResponseEntity<List<BankAccountResponseDto>> getBankAccountByUserId(@PathVariable Long userId) {
+        User currentUser = UserUtils.getCurrentUser();
+
+        if (!currentUser.getRole().equals(Role.ADMIN) && !currentUser.getId().equals(userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        try {
+            List<BankAccountResponseDto> userBankAccounts = bankAccountService.getBankAccountsByUserId(userId);
+            return ApiResponse.ok(userBankAccounts);
+        } catch (Exception e) {
+            return ApiResponse.badRequest(e.getMessage());
+        }
     }
 
 

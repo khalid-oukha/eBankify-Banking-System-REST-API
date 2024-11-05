@@ -30,4 +30,10 @@ public class UserUtils {
         }
         throw new RuntimeException("User is not authenticated");
     }
+
+    public static void validateUserExists(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFoundException("User with id " + userId + " not found");
+        }
+    }
 }
