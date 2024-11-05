@@ -1,11 +1,11 @@
 package com.ebankify.api.service.transaction;
 
-import com.ebankify.api.entity.Transaction;
+import com.ebankify.api.web.dto.transaction.TransactionResponseDTO;
 
 import java.util.List;
 
 public interface TransactionService {
-    List<Transaction> findAllByAccountFrom(Long accountFromId);
+    List<TransactionResponseDTO> findAllByAccountFrom(Long accountFromId);
 
-    List<Transaction> findAllByAccountTo(Long accountToId);
+    List<TransactionResponseDTO> findAllByAccountTo(Long accountToId);
 }
