@@ -4,12 +4,14 @@ import com.ebankify.api.entity.BankAccount;
 import com.ebankify.api.entity.User;
 import com.ebankify.api.entity.enums.AccountStatus;
 import com.ebankify.api.repository.BankAccountRepository;
+import com.ebankify.api.service.transaction.TransactionService;
 import com.ebankify.api.service.user.UserService;
 import com.ebankify.api.util.UserUtils;
+import com.ebankify.api.web.dto.bankAccount.BankAccountDetailsDTO;
 import com.ebankify.api.web.dto.bankAccount.BankAccountResponseDto;
 import com.ebankify.api.web.dto.bankAccount.UserBankAccountRequestDTO;
+import com.ebankify.api.web.dto.transaction.TransactionResponseDTO;
 import com.ebankify.api.web.dto.user.UserRequestDTO;
-import com.ebankify.api.web.mapper.bankAccount.BankAccountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +24,18 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     private final BankAccountRepository bankAccountRepository;
     private final UserService userService;
+    private final TransactionService transactionService;
 
     @Autowired
-    public BankAccountServiceImpl(BankAccountRepository bankAccountRepository, UserService userService, BankAccountMapper bankAccountMapper) {
+    public BankAccountServiceImpl(BankAccountRepository bankAccountRepository, UserService userService, TransactionService transactionService) {
         this.bankAccountRepository = bankAccountRepository;
         this.userService = userService;
+        this.transactionService = transactionService;
     }
 
+    public Optional<BankAccount> findById(Long id) {
+        return bankAccountRepository.findById(id);
+    }
 
     @Override
     public BankAccountResponseDto createBankAccount(User user) {
@@ -51,6 +58,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         return createBankAccount(userService.getUserById(userId).toUser());
     }
 
+    @Override
     public BankAccountResponseDto createBankAccountNewUser(UserRequestDTO userRequestDTO) {
         User user = userService.createUser(userRequestDTO).toUser();
         return createBankAccount(user);
@@ -64,8 +72,15 @@ public class BankAccountServiceImpl implements BankAccountService {
                 .toList();
     }
 
-    public Optional<BankAccount> findById(Long id) {
-        return bankAccountRepository.findById(id);
+    @Override
+    public BankAccountDetailsDTO findBankAccountDetailsById(Long id) {
+        BankAccount bankAccount = bankAccountRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Bank account not found"));
+
+        List<TransactionResponseDTO> transactionFrom = transactionService.findAllByAccountFrom(id);
+        List<TransactionResponseDTO> transactionTo = transactionService.findAllByAccountTo(id);
+
+        return BankAccountDetailsDTO.bankAccountAndTransactionsToDTO(bankAccount, transactionFrom, transactionTo);
     }
 
     @Override

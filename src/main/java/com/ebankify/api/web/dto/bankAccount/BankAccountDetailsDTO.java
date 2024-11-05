@@ -1,5 +1,6 @@
 package com.ebankify.api.web.dto.bankAccount;
 
+import com.ebankify.api.entity.BankAccount;
 import com.ebankify.api.web.dto.transaction.TransactionResponseDTO;
 import lombok.Builder;
 import lombok.Data;
@@ -18,15 +19,15 @@ public class BankAccountDetailsDTO {
     private List<TransactionResponseDTO> recentTransactionsFrom;
     private List<TransactionResponseDTO> recentTransactionsTo;
 
-    public static BankAccountDetailsDTO bankAccountAndTransactionsToDTO(BankAccountResponseDto bankAccountResponseDto, List<TransactionResponseDTO> recentTransactionsFrom, List<TransactionResponseDTO> recentTransactionsTo) {
+    public static BankAccountDetailsDTO bankAccountAndTransactionsToDTO(BankAccount bankAccount, List<TransactionResponseDTO> transactionsFrom, List<TransactionResponseDTO> transactionsTo) {
         return BankAccountDetailsDTO.builder()
-                .accountNumber(bankAccountResponseDto.getAccountNumber())
-                .balance(bankAccountResponseDto.getBalance())
-                .status(bankAccountResponseDto.getStatus().toString())
-                .username(bankAccountResponseDto.getUsername())
-                .email(bankAccountResponseDto.getEmail())
-                .recentTransactionsFrom(recentTransactionsFrom)
-                .recentTransactionsTo(recentTransactionsTo)
+                .accountNumber(bankAccount.getAccountNumber())
+                .balance(bankAccount.getBalance())
+                .status(bankAccount.getStatus().toString())
+                .username(bankAccount.getUser().getUsername())
+                .email(bankAccount.getUser().getEmail())
+                .recentTransactionsFrom(transactionsFrom)
+                .recentTransactionsTo(transactionsTo)
                 .build();
     }
 }

@@ -12,6 +12,7 @@ import java.util.UUID;
 @Builder
 @Data
 public class BankAccountResponseDto {
+    private Long id;
     private UUID accountNumber;
     private double balance;
     private AccountStatus status;
@@ -20,6 +21,7 @@ public class BankAccountResponseDto {
 
     public static BankAccountResponseDto fromBankAccountAndUser(BankAccount bankAccount, User user) {
         return BankAccountResponseDto.builder()
+                .id(bankAccount.getId())
                 .accountNumber(bankAccount.getAccountNumber())
                 .balance(bankAccount.getBalance())
                 .status(bankAccount.getStatus())

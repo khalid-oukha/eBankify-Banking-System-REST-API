@@ -6,6 +6,7 @@ import com.ebankify.api.entity.enums.Role;
 import com.ebankify.api.exception.user.UserAlreadyExistsException;
 import com.ebankify.api.service.bankAccount.BankAccountService;
 import com.ebankify.api.util.UserUtils;
+import com.ebankify.api.web.dto.bankAccount.BankAccountDetailsDTO;
 import com.ebankify.api.web.dto.bankAccount.BankAccountResponseDto;
 import com.ebankify.api.web.dto.user.UserRequestDTO;
 import jakarta.validation.Valid;
@@ -71,5 +72,9 @@ public class BankAccountController {
         }
     }
 
+    @GetMapping("/user/bank-accounts/{bankAccountId}")
+    public ResponseEntity<BankAccountDetailsDTO> getBankAccountDetails(@PathVariable Long bankAccountId) {
+        return ApiResponse.ok(bankAccountService.findBankAccountDetailsById(bankAccountId));
+    }
 
 }

@@ -3,7 +3,7 @@ package com.ebankify.api.service.transaction;
 import com.ebankify.api.entity.BankAccount;
 import com.ebankify.api.entity.Transaction;
 import com.ebankify.api.repository.TransactionRepository;
-import com.ebankify.api.service.bankAccount.BankAccountService;
+import com.ebankify.api.util.BankAccountUtils;
 import com.ebankify.api.web.dto.transaction.TransactionResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,18 +14,15 @@ import java.util.List;
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
-    private final BankAccountService bankAccountService;
 
     @Autowired
-    public TransactionServiceImpl(TransactionRepository transactionRepository, BankAccountService bankAccountService) {
+    public TransactionServiceImpl(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
-        this.bankAccountService = bankAccountService;
     }
 
     @Override
     public List<TransactionResponseDTO> findAllByAccountFrom(Long accountFromId) {
-        BankAccount accountFrom = bankAccountService.findById(accountFromId)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+        BankAccount accountFrom = BankAccountUtils.getBankAccountById(accountFromId);
 
         List<Transaction> transactionsFrom = transactionRepository.findAllByAccountFrom(accountFrom);
 
@@ -34,8 +31,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<TransactionResponseDTO> findAllByAccountTo(Long accountToId) {
-        BankAccount accountTo = bankAccountService.findById(accountToId)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+        BankAccount accountTo = BankAccountUtils.getBankAccountById(accountToId);
 
         List<Transaction> transactionsTo = transactionRepository.findAllByAccountTo(accountTo);
 
