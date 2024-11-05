@@ -56,7 +56,7 @@ public class BankAccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBankAccount);
     }
 
-    @GetMapping("/admin/bank-accounts/{userId}")
+    @GetMapping("/bank-accounts/user/{userId}")
     public ResponseEntity<List<BankAccountResponseDto>> getBankAccountByUserId(@PathVariable Long userId) {
         User currentUser = UserUtils.getCurrentUser();
 
@@ -72,9 +72,13 @@ public class BankAccountController {
         }
     }
 
-    @GetMapping("/user/bank-accounts/{bankAccountId}")
+    @GetMapping("/bank-accounts/account/{bankAccountId}")
     public ResponseEntity<BankAccountDetailsDTO> getBankAccountDetails(@PathVariable Long bankAccountId) {
-        return ApiResponse.ok(bankAccountService.findBankAccountDetailsById(bankAccountId));
+        try {
+            return ApiResponse.ok(bankAccountService.findBankAccountDetailsById(bankAccountId));
+        } catch (Exception e) {
+            return ApiResponse.badRequest(e.getMessage());
+        }
     }
 
 }
