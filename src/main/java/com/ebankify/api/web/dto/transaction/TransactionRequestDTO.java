@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public record TransactionRequestDTO(
         @NotNull(message = "Transaction type is required")
@@ -17,11 +18,11 @@ public record TransactionRequestDTO(
         @Positive(message = "Amount must be positive")
         Double amount,
 
-        @NotNull(message = "Source account ID is required")
-        Long accountFromId,
+        @NotNull(message = "Source account Number is required")
+        UUID accountFromNumber,
 
-        @NotNull(message = "Destination account ID is required")
-        Long accountToId,
+        @NotNull(message = "Destination account Number is required")
+        UUID accountToNumber,
 
         @NotNull(message = "Transaction status is required")
         TransactionStatus status,

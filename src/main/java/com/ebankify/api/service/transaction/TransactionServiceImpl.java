@@ -4,6 +4,7 @@ import com.ebankify.api.entity.BankAccount;
 import com.ebankify.api.entity.Transaction;
 import com.ebankify.api.repository.TransactionRepository;
 import com.ebankify.api.util.BankAccountUtils;
+import com.ebankify.api.validator.TransactionValidator;
 import com.ebankify.api.web.dto.transaction.TransactionRequestDTO;
 import com.ebankify.api.web.dto.transaction.TransactionResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +42,14 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public TransactionResponseDTO create(TransactionRequestDTO transactionRequestDTO) {
+        BankAccount accountFrom = BankAccountUtils.getBankAccountByAccountNumber(transactionRequestDTO.accountFromNumber());
+        BankAccount accountTo = BankAccountUtils.getBankAccountByAccountNumber(transactionRequestDTO.accountToNumber());
 
-        BankAccount accountFrom = BankAccountUtils.getBankAccountById(transactionRequestDTO.accountFromId());
-        BankAccount accountTo = BankAccountUtils.getBankAccountById(transactionRequestDTO.accountToId());
+        TransactionValidator.validateTransaction(accountFrom, accountTo, transactionRequestDTO);
 
         Transaction transaction = transactionRequestDTO.toTransaction(accountFrom, accountTo);
-
         return TransactionResponseDTO.transactionToDTO(transactionRepository.save(transaction));
     }
+
 
 }
