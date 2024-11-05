@@ -1,17 +1,14 @@
-package com.ebankify.api.mapper.bankAccount;
+package com.ebankify.api.web.mapper.bankAccount;
 
-import com.ebankify.api.dto.bankAccount.BankAccountResponseDto;
-import com.ebankify.api.dto.bankAccount.UserBankAccountRequestDTO;
-import com.ebankify.api.dto.user.UserRequestDTO;
 import com.ebankify.api.entity.BankAccount;
 import com.ebankify.api.entity.User;
+import com.ebankify.api.web.dto.bankAccount.BankAccountResponseDto;
+import com.ebankify.api.web.dto.bankAccount.UserBankAccountRequestDTO;
+import com.ebankify.api.web.dto.user.UserRequestDTO;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface BankAccountMapper {
-    BankAccountMapper INSTANCE = Mappers.getMapper(BankAccountMapper.class);
-
     BankAccount toBankAccount(UserBankAccountRequestDTO dto);
 
     User toUser(UserBankAccountRequestDTO dto);

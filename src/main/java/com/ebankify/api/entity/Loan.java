@@ -1,6 +1,6 @@
 package com.ebankify.api.entity;
 
-import com.ebankify.api.enums.LoanStatus;
+import com.ebankify.api.entity.enums.LoanStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-@Data
 @Entity
 @Table(name = "loans", indexes = {
         @Index(name = "idx_loan_id", columnList = "id")

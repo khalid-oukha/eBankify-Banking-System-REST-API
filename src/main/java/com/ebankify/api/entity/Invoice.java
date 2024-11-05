@@ -1,6 +1,6 @@
 package com.ebankify.api.entity;
 
-import com.ebankify.api.enums.InvoiceStatus;
+import com.ebankify.api.entity.enums.InvoiceStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-@Data
 @Entity
 @Table(name = "invoices", indexes = {
         @Index(name = "idx_invoice_id", columnList = "id")

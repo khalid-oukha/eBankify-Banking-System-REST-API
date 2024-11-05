@@ -1,15 +1,12 @@
 package com.ebankify.api.service.user;
 
-import com.ebankify.api.dto.user.UserRequestDTO;
-import com.ebankify.api.dto.user.UserResponseDTO;
 import com.ebankify.api.entity.User;
 import com.ebankify.api.exception.user.UserAlreadyExistsException;
 import com.ebankify.api.exception.user.UserNotFoundException;
 import com.ebankify.api.repository.UserRepository;
+import com.ebankify.api.web.dto.user.UserRequestDTO;
+import com.ebankify.api.web.dto.user.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -66,15 +63,4 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-    @Override
-    public User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-
-            return userRepository.findByEmail(username).orElseThrow(() -> new UserNotFoundException("User not found"));
-        }
-        throw new RuntimeException("User is not authenticated");
-    }
 }

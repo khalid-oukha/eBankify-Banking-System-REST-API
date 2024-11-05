@@ -1,6 +1,6 @@
 package com.ebankify.api.entity;
 
-import com.ebankify.api.enums.AccountStatus;
+import com.ebankify.api.entity.enums.AccountStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +13,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Data
 @Entity
 @Table(name = "bank_accounts", indexes = {
         @Index(name = "idx_bankaccount_id", columnList = "id, account_number")
@@ -33,7 +32,7 @@ public class BankAccount {
     @Column(nullable = false)
     private AccountStatus status = AccountStatus.ACTIVE;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

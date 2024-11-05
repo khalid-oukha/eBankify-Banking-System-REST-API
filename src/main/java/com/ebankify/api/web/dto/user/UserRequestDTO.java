@@ -1,7 +1,7 @@
-package com.ebankify.api.dto.user;
+package com.ebankify.api.web.dto.user;
 
 import com.ebankify.api.entity.User;
-import com.ebankify.api.enums.Role;
+import com.ebankify.api.entity.enums.Role;
 import jakarta.validation.constraints.*;
 
 public record UserRequestDTO(

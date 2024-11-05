@@ -1,12 +1,12 @@
-package com.ebankify.api.controller;
+package com.ebankify.api.web.rest.controller;
 
 import com.ebankify.api.commons.ApiResponse;
-import com.ebankify.api.dto.user.UserRequestDTO;
-import com.ebankify.api.dto.user.UserResponseDTO;
 import com.ebankify.api.entity.User;
 import com.ebankify.api.exception.user.UserAlreadyExistsException;
 import com.ebankify.api.exception.user.UserNotFoundException;
 import com.ebankify.api.service.user.UserService;
+import com.ebankify.api.web.dto.user.UserRequestDTO;
+import com.ebankify.api.web.dto.user.UserResponseDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
         try {

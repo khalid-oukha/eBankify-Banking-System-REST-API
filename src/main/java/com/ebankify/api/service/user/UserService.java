@@ -1,10 +1,10 @@
 package com.ebankify.api.service.user;
 
-import com.ebankify.api.dto.user.UserRequestDTO;
-import com.ebankify.api.dto.user.UserResponseDTO;
 import com.ebankify.api.entity.User;
 import com.ebankify.api.exception.user.UserAlreadyExistsException;
 import com.ebankify.api.exception.user.UserNotFoundException;
+import com.ebankify.api.web.dto.user.UserRequestDTO;
+import com.ebankify.api.web.dto.user.UserResponseDTO;
 
 import java.util.List;
 
@@ -18,6 +18,4 @@ public interface UserService {
     void deleteUser(Long userId) throws UserNotFoundException;
 
     List<User> getAllUsers();
-
-    User getCurrentUser();
 }

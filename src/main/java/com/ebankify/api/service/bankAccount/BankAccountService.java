@@ -1,15 +1,21 @@
 package com.ebankify.api.service.bankAccount;
 
-import com.ebankify.api.dto.bankAccount.BankAccountResponseDto;
-import com.ebankify.api.dto.bankAccount.UserBankAccountRequestDTO;
+import com.ebankify.api.entity.User;
+import com.ebankify.api.web.dto.bankAccount.BankAccountResponseDto;
+import com.ebankify.api.web.dto.bankAccount.UserBankAccountRequestDTO;
+import com.ebankify.api.web.dto.user.UserRequestDTO;
 
 import java.util.UUID;
 
 public interface BankAccountService {
 
-    BankAccountResponseDto createBankAccount(UserBankAccountRequestDTO bankAccountRequestDTO);
+    BankAccountResponseDto createBankAccount(User user);
 
-    BankAccountResponseDto getBankAccountByUserId(Long userId);
+    BankAccountResponseDto createBankAccountNewUser(UserRequestDTO userRequestDTO);
+
+    BankAccountResponseDto createBankAccountExistedUser(Long userId);
+
+    BankAccountResponseDto getBankAccountsByUserId(Long userId);
 
     BankAccountResponseDto getBankAccountByAccountNumber(UUID accountNumber);
 

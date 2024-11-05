@@ -1,17 +1,16 @@
 package com.ebankify.api.service.bankAccount;
 
-import com.ebankify.api.dto.bankAccount.BankAccountResponseDto;
-import com.ebankify.api.dto.bankAccount.UserBankAccountRequestDTO;
-import com.ebankify.api.dto.user.UserRequestDTO;
 import com.ebankify.api.entity.BankAccount;
 import com.ebankify.api.entity.User;
-import com.ebankify.api.enums.Role;
-import com.ebankify.api.mapper.bankAccount.BankAccountMapper;
+import com.ebankify.api.entity.enums.AccountStatus;
 import com.ebankify.api.repository.BankAccountRepository;
 import com.ebankify.api.service.user.UserService;
+import com.ebankify.api.web.dto.bankAccount.BankAccountResponseDto;
+import com.ebankify.api.web.dto.bankAccount.UserBankAccountRequestDTO;
+import com.ebankify.api.web.dto.user.UserRequestDTO;
+import com.ebankify.api.web.mapper.bankAccount.BankAccountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -22,37 +21,41 @@ public class BankAccountServiceImpl implements BankAccountService {
     private final UserService userService;
 
     @Autowired
-    public BankAccountServiceImpl(BankAccountRepository bankAccountRepository, UserService userService) {
+    public BankAccountServiceImpl(BankAccountRepository bankAccountRepository, UserService userService, BankAccountMapper bankAccountMapper) {
         this.bankAccountRepository = bankAccountRepository;
         this.userService = userService;
     }
 
+
     @Override
-    @Transactional
-    public BankAccountResponseDto createBankAccount(UserBankAccountRequestDTO userBankAccountRequestDTO) {
-        User user = userService.getCurrentUser();
-        BankAccount bankAccount;
+    public BankAccountResponseDto createBankAccount(User user) {
+        BankAccount createdBankAccount = bankAccountRepository.save(
+                BankAccount.builder()
+                        .accountNumber(UUID.randomUUID())
+                        .balance(0.0)
+                        .status(AccountStatus.ACTIVE)
+                        .user(user)
+                        .build()
+        );
 
-        if (user.getRole().equals(Role.USER)) {
-            bankAccount = BankAccount.builder()
-                    .balance(0)
-                    .user(user)
-                    .build();
-        } else {
-            UserRequestDTO userRequestDTO = BankAccountMapper.INSTANCE.toUserRequestDTO(userBankAccountRequestDTO);
-            userService.createUser(userRequestDTO);
-            bankAccount = BankAccountMapper.INSTANCE.toBankAccount(userBankAccountRequestDTO);
-        }
-
-        bankAccountRepository.save(bankAccount);
-
-        return BankAccountMapper.INSTANCE.toResponseDto(bankAccount, user);
+        return BankAccountResponseDto.fromBankAccountAndUser(
+                createdBankAccount, createdBankAccount.getUser()
+        );
     }
 
+    @Override
+    public BankAccountResponseDto createBankAccountExistedUser(Long userId) {
+        return createBankAccount(userService.getUserById(userId).toUser());
+    }
+
+    public BankAccountResponseDto createBankAccountNewUser(UserRequestDTO userRequestDTO) {
+        User user = userService.createUser(userRequestDTO).toUser();
+        return createBankAccount(user);
+    }
 
     @Override
-    public BankAccountResponseDto getBankAccountByUserId(Long userId) {
-        return null;
+    public BankAccountResponseDto getBankAccountsByUserId(Long userId) {
+
     }
 
     @Override
