@@ -92,4 +92,13 @@ public class BankAccountServiceImpl implements BankAccountService {
     public BankAccountResponseDto updateBankAccount(UUID accountNumber, UserBankAccountRequestDTO userBankAccountRequestDTO) {
         return null;
     }
+
+    @Override
+    public Boolean updateBankAccountBalance(UUID accountNumber, Double balance) {
+        BankAccount bankAccount = bankAccountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Bank account not found"));
+        bankAccount.setBalance(balance);
+        bankAccountRepository.save(bankAccount);
+        return true;
+    }
 }

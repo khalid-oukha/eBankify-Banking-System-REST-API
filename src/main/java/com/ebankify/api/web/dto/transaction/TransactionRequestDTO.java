@@ -24,9 +24,6 @@ public record TransactionRequestDTO(
         @NotNull(message = "Destination account Number is required")
         UUID accountToNumber,
 
-        @NotNull(message = "Transaction status is required")
-        TransactionStatus status,
-
         LocalDate date
 ) {
     public Transaction toTransaction(BankAccount accountFrom, BankAccount accountTo) {
@@ -35,7 +32,7 @@ public record TransactionRequestDTO(
                 .amount(amount)
                 .accountFrom(accountFrom)
                 .accountTo(accountTo)
-                .status(status != null ? status : TransactionStatus.PENDING)
+                .status(TransactionStatus.PENDING)
                 .date(date != null ? date : LocalDate.now())
                 .build();
     }
