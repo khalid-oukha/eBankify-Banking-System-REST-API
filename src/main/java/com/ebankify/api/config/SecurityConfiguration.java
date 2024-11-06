@@ -1,4 +1,5 @@
 package com.ebankify.api.config;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +40,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
+                                .requestMatchers("/api/v1/bank-accounts/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/users/**").hasRole("ADMIN")
                                 .anyRequest()
                                 .authenticated()

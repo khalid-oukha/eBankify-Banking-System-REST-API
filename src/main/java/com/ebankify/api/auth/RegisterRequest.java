@@ -1,6 +1,6 @@
 package com.ebankify.api.auth;
 
-import com.ebankify.api.enums.Role;
+import com.ebankify.api.entity.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
