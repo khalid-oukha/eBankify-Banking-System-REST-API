@@ -1,4 +1,4 @@
-package com.ebankify.api.validator;
+package com.ebankify.api.util;
 
 import com.ebankify.api.entity.BankAccount;
 import com.ebankify.api.entity.enums.AccountStatus;

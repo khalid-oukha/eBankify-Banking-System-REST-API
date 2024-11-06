@@ -5,7 +5,7 @@ import com.ebankify.api.entity.Transaction;
 import com.ebankify.api.exception.transactions.TransactionNotFoundException;
 import com.ebankify.api.repository.TransactionRepository;
 import com.ebankify.api.util.BankAccountUtils;
-import com.ebankify.api.validator.TransactionValidator;
+import com.ebankify.api.util.TransactionValidator;
 import com.ebankify.api.web.dto.transaction.TransactionRequestDTO;
 import com.ebankify.api.web.dto.transaction.TransactionResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public class TransactionServiceImpl implements TransactionService {
         TransactionValidator.validateTransaction(accountFrom, accountTo, transactionRequestDTO);
 
         Transaction transaction = transactionRequestDTO.toTransaction(accountFrom, accountTo);
-        
+
         return TransactionResponseDTO.transactionToDTO(transactionRepository.save(transaction));
     }
 
