@@ -56,7 +56,7 @@ public class TransactionServiceImpl implements TransactionService {
         TransactionValidator.validateTransaction(accountFrom, accountTo, transactionRequestDTO);
 
         Transaction transaction = transactionRequestDTO.toTransaction(accountFrom, accountTo);
-
+        
         return TransactionResponseDTO.transactionToDTO(transactionRepository.save(transaction));
     }
 

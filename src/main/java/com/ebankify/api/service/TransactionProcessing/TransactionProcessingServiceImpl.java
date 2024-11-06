@@ -44,4 +44,17 @@ public class TransactionProcessingServiceImpl implements TransactionProcessingSe
 
         return transactionService.updateTransaction(transaction);
     }
+
+    @Override
+    public TransactionResponseDTO rejectTransaction(Long transactionId) {
+        Transaction transaction = transactionService.findById(transactionId);
+
+        if (transaction.getStatus() != TransactionStatus.PENDING) {
+            throw new InvalidTransactionStatusException("Transaction is not in a pending state and cannot be approved.");
+        }
+
+        transaction.setStatus(TransactionStatus.REJECTED);
+
+        return transactionService.updateTransaction(transaction);
+    }
 }

@@ -8,6 +8,7 @@ import com.ebankify.api.web.dto.transaction.TransactionResponseDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,11 +34,23 @@ public class TransactionController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('EMPLOYEE')")
     @PutMapping("/{transactionId}/approve")
     public ResponseEntity<TransactionResponseDTO> approveTransaction(@PathVariable Long transactionId) {
         try {
             TransactionResponseDTO approvedTransaction = transactionProcessingService.approveTransaction(transactionId);
             return ApiResponse.ok(approvedTransaction);
+        } catch (Exception e) {
+            return ApiResponse.badRequest(e.getMessage());
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('EMPLOYEE')")
+    @PutMapping("/{transactionId}/reject")
+    public ResponseEntity<TransactionResponseDTO> rejectTransaction(@PathVariable Long transactionId) {
+        try {
+            TransactionResponseDTO rejectedTransaction = transactionProcessingService.rejectTransaction(transactionId);
+            return ApiResponse.ok(rejectedTransaction);
         } catch (Exception e) {
             return ApiResponse.badRequest(e.getMessage());
         }
