@@ -27,6 +27,8 @@ public interface BankAccountService {
 
     Boolean updateBankAccountBalance(UUID accountNumber, Double balance);
 
+    BankAccountResponseDto updateBankAccountStatus(Long id, String status);
+
     BankAccountResponseDto getBankAccountByAccountNumber(UUID accountNumber);
 
     BankAccountResponseDto updateBankAccount(UUID accountNumber, UserBankAccountRequestDTO userBankAccountRequestDTO);
