@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1731089801273-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: total_monthly_debt_payments
+                  type: DOUBLE
+            tableName: loans
+  - changeSet:
+      id: 1731089801273-8
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnName: total_monthly_debt_payments
+            tableName: loans
+
