@@ -22,7 +22,7 @@ public class InvoiceResponseDTO {
     private LocalDateTime paidAt;
 
     public static InvoiceResponseDTO fromInvoice(Invoice invoice) {
-        Boolean isPaid = (invoice.getPaidAt() != null);
+        boolean isPaid = (invoice.getPaidAt() != null);
         return InvoiceResponseDTO.builder()
                 .id(invoice.getId())
                 .amountDue(invoice.getAmountDue())
