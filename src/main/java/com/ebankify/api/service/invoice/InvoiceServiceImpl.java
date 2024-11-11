@@ -1,5 +1,6 @@
 package com.ebankify.api.service.invoice;
 
+import com.ebankify.api.entity.Invoice;
 import com.ebankify.api.entity.User;
 import com.ebankify.api.repository.InvoiceRepository;
 import com.ebankify.api.service.user.UserService;
@@ -32,8 +33,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceResponseDTO findById(long id) {
-        return null;
+    public Invoice findById(long id) {
+        return invoiceRepository.findById(id).orElseThrow(()
+                -> new IllegalArgumentException("Invoice with id " + id + " not found"));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.ebankify.api.web.rest.controller;
 
+import com.ebankify.api.repository.InvoiceRepository;
 import com.ebankify.api.service.invoice.InvoiceService;
 import com.ebankify.api.web.dto.invoice.InvoiceResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,12 @@ import java.util.List;
 @RequestMapping("/api/v1/invoices")
 public class InvoiceController {
     private final InvoiceService invoiceService;
+    private final InvoiceRepository invoiceRepository;
 
     @Autowired
-    public InvoiceController(InvoiceService invoiceService) {
+    public InvoiceController(InvoiceService invoiceService, InvoiceRepository invoiceRepository) {
         this.invoiceService = invoiceService;
+        this.invoiceRepository = invoiceRepository;
     }
 
     @GetMapping("/user/{userId}")
@@ -30,4 +33,15 @@ public class InvoiceController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<InvoiceResponseDTO> getInvoicesById(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(InvoiceResponseDTO.fromInvoice(invoiceService.findById(id)));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    
 }
