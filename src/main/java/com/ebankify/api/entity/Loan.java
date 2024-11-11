@@ -23,20 +23,22 @@ public class Loan {
     @Column(name = "amount", nullable = false)
     private Double amount;
 
-    @Column(name = "interest_rate", nullable = false)
-    private Double interestRate;
-
     @Column(name = "duration", nullable = false)
     private Integer duration;
 
     @Column(name = "monthly_income", nullable = false)
     private double monthlyIncome;
 
+    @Column(name = "total_monthly_debt_payments", nullable = false)
+    private double totalMonthlyDebtPayments = 0.0;
+
     @Column(name = "debt_to_income_ratio", nullable = false)
     private double debtToIncomeRatio;
 
     @Column(name = "member_since", nullable = false)
     private LocalDateTime memberSince;
+
+    private Integer creditRating;
 
     private String eligibilityCriteria;
 

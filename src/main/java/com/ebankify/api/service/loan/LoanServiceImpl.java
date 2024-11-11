@@ -1,7 +1,9 @@
 package com.ebankify.api.service.loan;
 
 import com.ebankify.api.entity.Loan;
+import com.ebankify.api.entity.enums.LoanStatus;
 import com.ebankify.api.repository.LoanRepository;
+import com.ebankify.api.service.loanProcessing.LoanProcessingService;
 import com.ebankify.api.util.UserUtils;
 import com.ebankify.api.web.dto.loan.LoanRequestDTO;
 import com.ebankify.api.web.dto.loan.LoanResponseDTO;
@@ -13,10 +15,12 @@ import java.util.List;
 @Service
 public class LoanServiceImpl implements LoanService {
     private final LoanRepository loanRepository;
+    private final LoanProcessingService loanProcessingService;
 
     @Autowired
-    public LoanServiceImpl(LoanRepository loanRepository) {
+    public LoanServiceImpl(LoanRepository loanRepository, LoanProcessingService loanProcessingService) {
         this.loanRepository = loanRepository;
+        this.loanProcessingService = loanProcessingService;
     }
 
 
@@ -37,6 +41,11 @@ public class LoanServiceImpl implements LoanService {
     public LoanResponseDTO create(LoanRequestDTO loanRequestDTO) {
         Loan loan = loanRequestDTO.toLoan();
         loan.setUser(UserUtils.getCurrentUser());
+        loan.setMemberSince(UserUtils.getCurrentUser().getCreatedAt());
+        loan.setCreditRating(loanProcessingService.calculateCreditRating(loan));
+        loan.setDebtToIncomeRatio(loanProcessingService.calculateDebtToIncomeRatio(loan.getTotalMonthlyDebtPayments(), loan.getMonthlyIncome()));
+        loan.setEligibilityCriteria("we will send you an email with the eligibility criteria");
+        loan.setStatus(LoanStatus.PENDING);
         Loan createdLoan = loanRepository.save(loan);
         return LoanResponseDTO.fromLoanAndUser(createdLoan, createdLoan.getUser());
     }
@@ -47,5 +56,14 @@ public class LoanServiceImpl implements LoanService {
                 .orElseThrow(() -> new IllegalArgumentException("Loan not found"));
 
         loanRepository.delete(existingLoan);
+    }
+
+    public LoanResponseDTO updateStatus(Long id, LoanStatus status) {
+        Loan existingLoan = loanRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Loan not found"));
+
+        existingLoan.setStatus(status);
+        loanRepository.save(existingLoan);
+        return LoanResponseDTO.fromLoanAndUser(existingLoan, existingLoan.getUser());
     }
 }

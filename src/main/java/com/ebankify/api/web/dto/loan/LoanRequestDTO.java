@@ -20,13 +20,19 @@ public record LoanRequestDTO(
         @NotNull(message = "Monthly income must not be null")
         @Positive(message = "Monthly income must be greater than 0")
         @DecimalMin(value = "500.00", message = "Monthly income must be at least 500.00") // Example minimum monthly income
-        double monthlyIncome
+        double monthlyIncome,
+
+        @NotNull(message = "Total monthly debt payments must not be null")
+        @Positive(message = "Total monthly debt payments must be greater than 0")
+        @DecimalMin(value = "0.00", message = "Total monthly debt payments must be at least 0.00")
+        double totalMonthlyDebtPayments
 ) {
     public Loan toLoan() {
         return Loan.builder()
                 .amount(this.amount)
                 .duration(this.duration)
                 .monthlyIncome(this.monthlyIncome)
+                .totalMonthlyDebtPayments(this.totalMonthlyDebtPayments)
                 .build();
     }
 }
