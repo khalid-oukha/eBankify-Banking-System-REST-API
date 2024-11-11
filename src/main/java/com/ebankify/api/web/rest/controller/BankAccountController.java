@@ -49,6 +49,15 @@ public class BankAccountController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/admin/bank-accounts/{bankAccountId}/status")
+    public ResponseEntity<BankAccountResponseDto> updateBankAccountStatus(
+            @PathVariable Long bankAccountId,
+            @RequestParam String status) {
+        BankAccountResponseDto updatedBankAccount = bankAccountService.updateBankAccountStatus(bankAccountId, status);
+        return ResponseEntity.ok(updatedBankAccount);
+    }
+
     @PostMapping("/user/bank-accounts")
     public ResponseEntity<BankAccountResponseDto> createOwnBankAccount() {
         User currentUser = UserUtils.getCurrentUser();

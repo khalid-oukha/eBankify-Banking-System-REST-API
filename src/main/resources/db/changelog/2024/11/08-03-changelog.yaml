@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1731090693052-10
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: credit_rating
+                  type: INT
+            tableName: loans
+

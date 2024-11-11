@@ -101,4 +101,13 @@ public class BankAccountServiceImpl implements BankAccountService {
         bankAccountRepository.save(bankAccount);
         return true;
     }
+
+    @Override
+    public BankAccountResponseDto updateBankAccountStatus(Long id, String status) {
+        BankAccount bankAccount = bankAccountRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Bank account not found"));
+        bankAccount.setStatus(AccountStatus.valueOf(status));
+        bankAccountRepository.save(bankAccount);
+        return BankAccountResponseDto.fromBankAccountAndUser(bankAccount, bankAccount.getUser());
+    }
 }

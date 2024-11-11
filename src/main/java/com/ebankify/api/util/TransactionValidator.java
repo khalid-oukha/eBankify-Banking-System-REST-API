@@ -9,14 +9,14 @@ import com.ebankify.api.web.dto.transaction.TransactionRequestDTO;
 
 public class TransactionValidator {
 
-    public static void validateTransaction(BankAccount accountFrom, BankAccount accountTo, TransactionRequestDTO requestDTO) {
-        validateBalance(accountFrom, requestDTO.amount());
+    public static void validateTransaction(BankAccount accountFrom, BankAccount accountTo, TransactionRequestDTO requestDTO, double fee) {
+        validateBalance(accountFrom, requestDTO.amount(), fee);
         validateAccountStatus(accountFrom, accountTo);
         validateDifferentAccounts(accountFrom, accountTo);
     }
 
-    private static void validateBalance(BankAccount accountFrom, Double amount) {
-        if (accountFrom.getBalance() < amount) {
+    private static void validateBalance(BankAccount accountFrom, Double amount, double fee) {
+        if (accountFrom.getBalance() < amount + fee) {
             throw new InsufficientBalanceException("Insufficient balance in the source account.");
         }
     }

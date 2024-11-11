@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1731081916240-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: debt_to_income_ratio
+                  type: DOUBLE
+              - column:
+                  name: member_since
+                  type: DATETIME
+              - column:
+                  name: monthly_income
+                  type: DOUBLE
+            tableName: loans
+  - changeSet:
+      id: 1731081916240-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnName: debt_to_income_ratio
+            tableName: loans
+  - changeSet:
+      id: 1731081916240-4
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnName: member_since
+            tableName: loans
+  - changeSet:
+      id: 1731081916240-6
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnName: monthly_income
+            tableName: loans
+

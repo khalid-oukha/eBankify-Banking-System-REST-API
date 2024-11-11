@@ -27,7 +27,7 @@ public class TransactionController {
     @PostMapping()
     public ResponseEntity<TransactionResponseDTO> createTransaction(@Valid @RequestBody TransactionRequestDTO transactionRequestDTO) {
         try {
-            TransactionResponseDTO createdTransaction = transactionService.create(transactionRequestDTO);
+            TransactionResponseDTO createdTransaction = transactionProcessingService.create(transactionRequestDTO);
             return ApiResponse.created("/api/v1/transactions/" + createdTransaction.getId(), createdTransaction);
         } catch (Exception e) {
             return ApiResponse.badRequest(e.getMessage());
