@@ -138,6 +138,13 @@ public class UserServiceTests {
 
     @Test
     void deleteUser_should_throw_UserNotFoundException_if_user_not_found() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
+        UserNotFoundException exception = assertThrows(
+                UserNotFoundException.class,
+                () -> userService.deleteUser(1L)
+        );
+
+        assertEquals("User with id 1 not found", exception.getMessage());
     }
 }
