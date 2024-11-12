@@ -29,4 +29,13 @@ public class BankAccountResponseDto {
                 .email(user.getEmail())
                 .build();
     }
+
+    public BankAccount toBankAccountEntity() {
+        return BankAccount.builder()
+                .id(this.id)
+                .accountNumber(this.accountNumber)
+                .balance(this.balance)
+                .status(this.status)
+                .build();
+    }
 }

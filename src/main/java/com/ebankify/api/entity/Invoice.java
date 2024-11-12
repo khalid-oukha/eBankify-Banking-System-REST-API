@@ -21,6 +21,7 @@ public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     private double amountDue;
     private LocalDate dueDate;
 
@@ -28,7 +29,7 @@ public class Invoice {
     @Column(nullable = false)
     private InvoiceStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

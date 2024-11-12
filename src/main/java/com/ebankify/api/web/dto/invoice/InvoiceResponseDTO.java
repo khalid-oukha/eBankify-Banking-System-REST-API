@@ -1,6 +1,7 @@
 package com.ebankify.api.web.dto.invoice;
 
 import com.ebankify.api.entity.Invoice;
+import com.ebankify.api.entity.enums.InvoiceStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,19 +19,29 @@ public class InvoiceResponseDTO {
     private LocalDate dueDate;
     private String email;
     private String username;
-    private boolean paid;
     private LocalDateTime paidAt;
+    private InvoiceStatus status;
 
     public static InvoiceResponseDTO fromInvoice(Invoice invoice) {
-        boolean isPaid = (invoice.getPaidAt() != null);
         return InvoiceResponseDTO.builder()
                 .id(invoice.getId())
                 .amountDue(invoice.getAmountDue())
                 .dueDate(invoice.getDueDate())
                 .email(invoice.getUser().getEmail())
                 .username(invoice.getUser().getUsername())
-                .paid(isPaid)
+                .status(invoice.getStatus())
                 .paidAt(invoice.getPaidAt())
                 .build();
     }
+
+    public Invoice toInvoice() {
+        return Invoice.builder()
+                .id(this.id)
+                .amountDue(this.amountDue)
+                .dueDate(this.dueDate)
+                .status(this.status)
+                .paidAt(this.paidAt)
+                .build();
+    }
+
 }

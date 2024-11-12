@@ -18,4 +18,6 @@ public interface UserService {
     void deleteUser(Long userId) throws UserNotFoundException;
 
     List<User> getAllUsers();
+
+    User findByEmail(String email);
 }
