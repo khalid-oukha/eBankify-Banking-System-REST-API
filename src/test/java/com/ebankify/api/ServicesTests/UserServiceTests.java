@@ -108,21 +108,32 @@ public class UserServiceTests {
 
     @Test
     void updateUser_should_update_user_if_exists() throws UserNotFoundException {
+        UserRequestDTO userRequestDTO = new UserRequestDTO(
+                "khalidoukha",
+                "khalid@example.com",
+                "password123",
+                25,
+                Role.USER
+        );
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(userRequestDTO.toUser()));
+        when(userRepository.save(any(User.class))).thenReturn(userRequestDTO.toUser());
+
+        UserResponseDTO result = userService.updateUser(1L, userRequestDTO);
+        User updatedUser = userRequestDTO.toUser();
+
+        assertEquals(result, UserResponseDTO.fromUser(updatedUser), "The result should match the updated user");
 
     }
 
     @Test
     void deleteUser_should_delete_user_if_exists() throws UserNotFoundException {
         Long userId = 1L;
-        User user = User.builder()
-                .id(userId)
-                .username("johnDoe")
-                .email("johndoe@example.com")
-                .password("password")
-                .age(30)
-                .role(Role.USER)
-                .build();
+        when(userRepository.findById(1L)).thenReturn(Optional.of(User.builder().id(userId).build()));
 
+        userService.deleteUser(1L);
+
+        verify(userRepository, times(1)).delete(any(User.class));
     }
 
     @Test
