@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -146,5 +147,45 @@ public class UserServiceTests {
         );
 
         assertEquals("User with id 1 not found", exception.getMessage());
+    }
+
+    @Test
+    void getAllUsers_should_return_all_users() {
+        List<User> users = List.of(
+                User.builder().id(1L)
+                        .username("oukhakhalid")
+                        .email("oukha@gmail.Com")
+                        .role(Role.USER)
+                        .build(),
+                User.builder().id(2L)
+                        .username("oukhakhalid")
+                        .email("oukha@gmail.Com")
+                        .role(Role.USER)
+                        .build()
+        );
+
+        when(userRepository.findAll()).thenReturn(users);
+
+        List<User> result = userService.getAllUsers();
+
+        assertEquals(users, result, "The result should match the users");
+    }
+
+    @Test
+    void findByEmail_should_return_user_if_exists() {
+        User user = User.builder()
+                .id(1L)
+                .username("oukhakhalid")
+                .email("oukhakhalid@gmail.com")
+                .password("password123")
+                .age(25)
+                .role(Role.USER)
+                .build();
+
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+        User result = userService.findByEmail(user.getEmail());
+
+        assertEquals(result, user, "The result should match the user");
     }
 }
