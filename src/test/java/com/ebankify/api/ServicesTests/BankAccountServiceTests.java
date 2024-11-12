@@ -10,7 +10,7 @@ import com.ebankify.api.service.bankAccount.BankAccountServiceImpl;
 import com.ebankify.api.service.transaction.TransactionService;
 import com.ebankify.api.service.user.UserService;
 import com.ebankify.api.web.dto.bankAccount.BankAccountResponseDto;
-import org.junit.jupiter.api.BeforeAll;
+import com.ebankify.api.web.dto.user.UserResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,8 +19,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class BankAccountServiceTests {
     private BankAccountRepository bankAccountRepository;
@@ -93,8 +92,38 @@ public class BankAccountServiceTests {
 
     @Test
     void createBankAccountExistedUser_should_create_account_for_existing_user() {
+        Long userId = 1000L;
 
+        User existingUser = User.builder()
+                .id(userId)
+                .role(Role.USER)
+                .username("khalid")
+                .email("oukhakhalid@gmail.com")
+                .build();
+
+        BankAccount expectedBankAccount = BankAccount.builder()
+                .id(2000L)
+                .accountNumber(UUID.randomUUID())
+                .balance(0.0)
+                .status(AccountStatus.ACTIVE)
+                .user(existingUser)
+                .build();
+
+        when(userService.getUserById(userId)).thenReturn(UserResponseDTO.fromUser(existingUser));
+
+        when(bankAccountRepository.save(any(BankAccount.class))).thenReturn(expectedBankAccount);
+
+        BankAccountResponseDto result = bankAccountService.createBankAccountExistedUser(userId);
+
+        assertEquals(expectedBankAccount.getUser().getEmail(), result.getEmail(), "Email should match");
+        assertEquals(expectedBankAccount.getUser().getUsername(), result.getUsername(), "Username should match");
+        assertEquals(expectedBankAccount.getAccountNumber(), result.getAccountNumber(), "Account number should match");
+        assertEquals(expectedBankAccount.getBalance(), result.getBalance(), "Balance should match");
+        assertEquals(expectedBankAccount.getStatus(), result.getStatus(), "Status should match");
+
+        verify(bankAccountRepository).save(any(BankAccount.class));
     }
+
 
     @Test
     void createBankAccountExistedUser_should_throw_UserNotFoundException_if_user_not_found() {
