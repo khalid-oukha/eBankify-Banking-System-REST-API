@@ -29,7 +29,7 @@ public class BankAccountController {
         this.bankAccountService = bankAccountService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/admin/bank-accounts/{userId}")
     public ResponseEntity<BankAccountResponseDto> createBankAccountForExistingUser(
             @PathVariable Long userId) {
@@ -37,7 +37,7 @@ public class BankAccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBankAccount);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/admin/bank-accounts/new-user")
     public ResponseEntity<BankAccountResponseDto> createBankAccountForNewUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
         try {
@@ -49,7 +49,7 @@ public class BankAccountController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/admin/bank-accounts/{bankAccountId}/status")
     public ResponseEntity<BankAccountResponseDto> updateBankAccountStatus(
             @PathVariable Long bankAccountId,

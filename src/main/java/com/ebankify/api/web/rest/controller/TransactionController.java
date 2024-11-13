@@ -34,7 +34,7 @@ public class TransactionController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('EMPLOYEE')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_EMPLOYEE')")
     @PutMapping("/{transactionId}/approve")
     public ResponseEntity<TransactionResponseDTO> approveTransaction(@PathVariable Long transactionId) {
         try {
@@ -45,7 +45,7 @@ public class TransactionController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('EMPLOYEE')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_EMPLOYEE')")
     @PutMapping("/{transactionId}/reject")
     public ResponseEntity<TransactionResponseDTO> rejectTransaction(@PathVariable Long transactionId) {
         try {

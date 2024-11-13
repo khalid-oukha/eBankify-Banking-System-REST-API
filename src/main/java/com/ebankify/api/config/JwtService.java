@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,31 +37,14 @@ public class JwtService {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> extraClaims = new HashMap<>();
-
-        String role = userDetails.getAuthorities().stream()
-                .findFirst()
-                .map(Object::toString)
-                .orElse("USER");
-        extraClaims.put("role", role);
-
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
-    public String extractRole(String token) {
-        return extractClaim(token, claims -> claims.get("role", String.class));
-    }
 
     public String generateToken(
             Map<String, Object> extraClaims,
             UserDetails userDetails
     ) {
-        if (!extraClaims.containsKey("role")) {
-            String role = userDetails.getAuthorities().stream()
-                    .findFirst()
-                    .map(Object::toString)
-                    .orElse("USER");
-            extraClaims.put("role", role);
-        }
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
