@@ -2,16 +2,17 @@ package com.ebankify.api.web.rest.controller;
 
 
 import com.ebankify.api.commons.ApiResponse;
+import com.ebankify.api.entity.enums.LoanStatus;
 import com.ebankify.api.service.loan.LoanService;
 import com.ebankify.api.web.dto.loan.LoanRequestDTO;
 import com.ebankify.api.web.dto.loan.LoanResponseDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/loans")
@@ -29,6 +30,24 @@ public class LoanController {
         try {
             LoanResponseDTO loanResponseDTO = loanService.create(loanRequestDTO);
             return ApiResponse.created("/api/v1/loans/" + loanResponseDTO.getId(), loanResponseDTO);
+        } catch (Exception e) {
+            return ApiResponse.badRequest(e.getMessage());
+        }
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<LoanResponseDTO>> getAllLoans() {
+        List<LoanResponseDTO> loanResponseDTOList = loanService.findAll();
+        return ApiResponse.ok(loanResponseDTOList);
+    }
+
+    @PutMapping("/{id}/status")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_EMPLOYEE')")
+    public ResponseEntity<LoanResponseDTO> updateLoanStatus(@PathVariable Long id, @RequestParam LoanStatus status) {
+        try {
+            LoanResponseDTO loanResponseDTO = loanService.updateStatus(id, status);
+            return ApiResponse.ok(loanResponseDTO);
         } catch (Exception e) {
             return ApiResponse.badRequest(e.getMessage());
         }

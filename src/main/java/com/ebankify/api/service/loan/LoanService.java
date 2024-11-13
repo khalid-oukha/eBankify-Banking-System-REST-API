@@ -1,5 +1,6 @@
 package com.ebankify.api.service.loan;
 
+import com.ebankify.api.entity.enums.LoanStatus;
 import com.ebankify.api.web.dto.loan.LoanRequestDTO;
 import com.ebankify.api.web.dto.loan.LoanResponseDTO;
 
@@ -13,4 +14,6 @@ public interface LoanService {
     LoanResponseDTO create(LoanRequestDTO loanRequestDTO);
 
     void delete(Long id);
+
+    LoanResponseDTO updateStatus(Long id, LoanStatus status);
 }
