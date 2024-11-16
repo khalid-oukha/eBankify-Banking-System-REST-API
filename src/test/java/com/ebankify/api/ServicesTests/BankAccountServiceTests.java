@@ -63,6 +63,7 @@ public class BankAccountServiceTests {
 
     @Test
     void createBankAccount_should_create_new_account_for_user() {
+        //Arrange
         User ownerUser = User.builder()
                 .id(1000L)
                 .role(Role.USER)
@@ -81,8 +82,10 @@ public class BankAccountServiceTests {
 
         when(bankAccountRepository.save(any(BankAccount.class))).thenReturn(expectedBankAccount);
 
+        //Act
         BankAccountResponseDto result = bankAccountService.createBankAccount(ownerUser);
 
+        //Assert
         assertEquals(expectedBankAccount.getUser().getEmail(), result.getEmail(), "Email should match");
         assertEquals(expectedBankAccount.getUser().getUsername(), result.getUsername(), "Username should match");
         assertEquals(expectedBankAccount.getAccountNumber(), result.getAccountNumber(), "Account number should match");
