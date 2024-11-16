@@ -25,7 +25,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final UserService userService;
     private final BankAccountService bankAccountService;
 
-    @Autowired
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, UserService userService, BankAccountService bankAccountService) {
         this.invoiceRepository = invoiceRepository;
         this.userService = userService;

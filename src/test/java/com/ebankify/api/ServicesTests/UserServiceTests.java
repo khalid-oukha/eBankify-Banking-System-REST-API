@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -108,25 +109,83 @@ public class UserServiceTests {
 
     @Test
     void updateUser_should_update_user_if_exists() throws UserNotFoundException {
+        UserRequestDTO userRequestDTO = new UserRequestDTO(
+                "khalidoukha",
+                "khalid@example.com",
+                "password123",
+                25,
+                Role.USER
+        );
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(userRequestDTO.toUser()));
+        when(userRepository.save(any(User.class))).thenReturn(userRequestDTO.toUser());
+
+        UserResponseDTO result = userService.updateUser(1L, userRequestDTO);
+        User updatedUser = userRequestDTO.toUser();
+
+        assertEquals(result, UserResponseDTO.fromUser(updatedUser), "The result should match the updated user");
 
     }
 
     @Test
     void deleteUser_should_delete_user_if_exists() throws UserNotFoundException {
         Long userId = 1L;
-        User user = User.builder()
-                .id(userId)
-                .username("johnDoe")
-                .email("johndoe@example.com")
-                .password("password")
-                .age(30)
-                .role(Role.USER)
-                .build();
+        when(userRepository.findById(1L)).thenReturn(Optional.of(User.builder().id(userId).build()));
 
+        userService.deleteUser(1L);
+
+        verify(userRepository, times(1)).delete(any(User.class));
     }
 
     @Test
     void deleteUser_should_throw_UserNotFoundException_if_user_not_found() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
+        UserNotFoundException exception = assertThrows(
+                UserNotFoundException.class,
+                () -> userService.deleteUser(1L)
+        );
+
+        assertEquals("User with id 1 not found", exception.getMessage());
+    }
+
+    @Test
+    void getAllUsers_should_return_all_users() {
+        List<User> users = List.of(
+                User.builder().id(1L)
+                        .username("oukhakhalid")
+                        .email("oukha@gmail.Com")
+                        .role(Role.USER)
+                        .build(),
+                User.builder().id(2L)
+                        .username("oukhakhalid")
+                        .email("oukha@gmail.Com")
+                        .role(Role.USER)
+                        .build()
+        );
+
+        when(userRepository.findAll()).thenReturn(users);
+
+        List<User> result = userService.getAllUsers();
+
+        assertEquals(users, result, "The result should match the users");
+    }
+
+    @Test
+    void findByEmail_should_return_user_if_exists() {
+        User user = User.builder()
+                .id(1L)
+                .username("oukhakhalid")
+                .email("oukhakhalid@gmail.com")
+                .password("password123")
+                .age(25)
+                .role(Role.USER)
+                .build();
+
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+        User result = userService.findByEmail(user.getEmail());
+
+        assertEquals(result, user, "The result should match the user");
     }
 }
