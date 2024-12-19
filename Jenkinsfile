@@ -28,7 +28,8 @@ pipeline {
         stage('Run Unit Tests with JaCoCo Coverage') {
             steps {
                 echo 'Running unit tests with JaCoCo coverage...'
-                sh './mvnw test'
+                sh './mvnw test -Dtestcontainers.ryuk.disabled=true'
+
             }
         }
 
