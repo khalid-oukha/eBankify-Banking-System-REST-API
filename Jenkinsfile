@@ -70,9 +70,10 @@ pipeline {
 
     post {
         always {
+            // Archive test results and artifacts
             junit '**/target/surefire-reports/*.xml' // Test results
             jacoco execPattern: 'target/jacoco.exec' // JaCoCo report
-            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true // Archive the JAR
         }
 
         success {
