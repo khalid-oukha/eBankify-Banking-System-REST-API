@@ -36,7 +36,7 @@ pipeline {
         stage('Run Unit Tests with Debugging') {
             steps {
                 echo 'Running unit tests with debugging enabled...'
-                sh './mvnw clean install -DskipTests'
+                sh './mvnw clean install'
             }
         }
 
