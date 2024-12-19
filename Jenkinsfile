@@ -14,12 +14,18 @@ pipeline {
     stages {
         stage('Verify Maven') {
             steps {
+                script {
+                    echo 'Verifying Maven installation...'
+                }
                 sh 'mvn -version'
             }
         }
 
         stage('Checkout Code') {
             steps {
+                script {
+                    echo 'Checking out code from GitHub repository...'
+                }
                 // Fetch the repository from GitHub
                 git branch: 'main',
                     url: 'https://github.com/khalid-oukha/eBankify-Banking-System-REST-API'
@@ -28,6 +34,9 @@ pipeline {
 
         stage('Build') {
             steps {
+                script {
+                    echo 'Running Maven build process...'
+                }
                 // Run Maven clean and package commands
                 sh './mvnw clean package -DskipTests'
             }
@@ -35,6 +44,9 @@ pipeline {
 
         stage('Run Unit Tests with Coverage') {
             steps {
+                script {
+                    echo 'Running unit tests with JaCoCo coverage...'
+                }
                 // Run tests and generate JaCoCo code coverage
                 sh './mvnw test'
             }
@@ -42,6 +54,9 @@ pipeline {
 
         stage('Code Analysis with SonarQube') {
             steps {
+                script {
+                    echo 'Running code analysis with SonarQube...'
+                }
                 withSonarQubeEnv('SonarQube') { // Use the SonarQube server configured in Jenkins
                     sh """
                     sonar-scanner \
@@ -60,6 +75,9 @@ pipeline {
 
         stage('Quality Gate Check') {
             steps {
+                script {
+                    echo 'Checking SonarQube quality gate...'
+                }
                 timeout(time: 2, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
@@ -68,6 +86,9 @@ pipeline {
 
         stage('Deploy Application') {
             steps {
+                script {
+                    echo 'Deploying the Spring Boot application...'
+                }
                 // Deploy the Spring Boot application
                 sh 'java -jar target/*.jar'
             }
@@ -76,6 +97,9 @@ pipeline {
 
     post {
         always {
+            script {
+                echo 'Archiving artifacts and test results...'
+            }
             // Archive test results and artifacts
             junit '**/target/surefire-reports/*.xml' // Test results
             jacoco execPattern: 'target/jacoco.exec' // JaCoCo report
@@ -83,11 +107,15 @@ pipeline {
         }
 
         success {
-            echo 'Pipeline completed successfully!'
+            script {
+                echo 'Pipeline completed successfully!'
+            }
         }
 
         failure {
-            echo 'Pipeline failed. Please check the logs.'
+            script {
+                echo 'Pipeline failed. Please check the logs for details.'
+            }
         }
     }
 }
