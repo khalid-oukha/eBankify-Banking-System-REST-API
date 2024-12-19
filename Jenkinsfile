@@ -2,13 +2,12 @@ pipeline {
     agent any
 
     environment {
-        // SonarQube environment variables
+        PATH = "/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/Maven3/bin:${env.PATH}"
         SONAR_HOST_URL = 'http://localhost:9000'
         SONAR_AUTH_TOKEN = 'sqa_fb88955f1a313e55a6b2b1ecd54507ccb9c7e091'
     }
 
     tools {
-        // Ensures Maven is installed and configured under Global Tool Configuration in Jenkins
         maven 'Maven3'
     }
 
@@ -21,7 +20,6 @@ pipeline {
             }
         }
 
-        // Verify Maven installation
         stage('Verify Maven') {
             steps {
                 echo 'Verifying Maven installation...'
