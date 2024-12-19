@@ -17,6 +17,12 @@ pipeline {
             }
         }
 
+        stage('Set Maven Wrapper Permissions') {
+            steps {
+                sh 'chmod +x ./mvnw'
+            }
+        }
+
         stage('Build') {
             steps {
                 script {
