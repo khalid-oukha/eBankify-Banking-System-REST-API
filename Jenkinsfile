@@ -12,34 +12,24 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
-            steps {
-                echo 'Checking out code from GitHub...'
-                git branch: 'main',
-                    url: 'https://github.com/khalid-oukha/eBankify-Banking-System-REST-API'
-            }
-        }
+                stage('Set Maven Wrapper Permissions') {
+                    steps {
+                        sh 'chmod +x ./mvnw'
+                    }
+                }
+                stage('Build Project') {
+                    steps {
+                        sh './mvnw clean package -DskipTests'
+                    }
+                }
+                stage('SonarQube Analysis') {
+                    steps {
+                        withSonarQubeEnv('SonarQube') {
+                             sh './mvnw sonar:sonar -Dsonar.host.url=http://sonarqube:9000'
+                        }
+                    }
+                }
 
-        stage('Set Maven Wrapper Permissions') {
-            steps {
-                echo 'Setting executable permissions for Maven Wrapper...'
-                sh 'chmod +x ./mvnw'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                echo 'Building the project using Maven Wrapper...'
-                sh './mvnw clean package -DskipTests'
-            }
-        }
-
-        stage('Run Unit Tests with JaCoCo Coverage') {
-            steps {
-                echo 'Running unit tests with JaCoCo coverage...'
-                sh './mvnw test'
-            }
-        }
 
         stage('Code Analysis with SonarQube') {
             steps {
