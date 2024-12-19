@@ -4,7 +4,6 @@ pipeline {
     environment {
         SONAR_HOST_URL = 'http://localhost:9000'
         SONAR_AUTH_TOKEN = 'sqa_fb88955f1a313e55a6b2b1ecd54507ccb9c7e091'
-        TESTCONTAINERS_RYUK_DISABLED = 'true'
     }
 
     stages {
