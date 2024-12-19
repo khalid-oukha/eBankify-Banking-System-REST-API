@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-            SONAR_HOST_URL = 'http://localhost:9000'
-            SONAR_AUTH_TOKEN = 'sqa_fb88955f1a313e55a6b2b1ecd54507ccb9c7e091'
+        SONAR_HOST_URL = 'http://localhost:9000'
+        SONAR_AUTH_TOKEN = 'sqa_fb88955f1a313e55a6b2b1ecd54507ccb9c7e091'
     }
 
     stages {
@@ -12,23 +12,21 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/khalid-oukha/eBankify-Banking-System-REST-API'
             }
         }
+
         stage('Set Maven Wrapper Permissions') {
             steps {
                 sh 'chmod +x ./mvnw'
             }
         }
+
         stage('Build Project') {
             steps {
                 sh './mvnw clean package -DskipTests'
             }
         }
 
-
         stage('Run Unit Tests with JaCoCo Coverage') {
             steps {
-                script {
-                    echo 'Running unit tests with JaCoCo coverage...'
-                }
                 echo 'Running unit tests with JaCoCo coverage...'
                 sh './mvnw test'
             }
@@ -36,13 +34,9 @@ pipeline {
 
         stage('Code Analysis with SonarQube') {
             steps {
-                script {
-                    echo 'Running SonarQube code analysis...'
-                }
                 echo 'Running SonarQube code analysis...'
                 withSonarQubeEnv('SonarQube') {
                     sh """
-                    mvn sonar:sonar \
                     ./mvnw sonar:sonar \
                         -Dsonar.projectKey=com.eBankify.api:eBankify \
                         -Dsonar.host.url=${SONAR_HOST_URL} \
@@ -54,9 +48,6 @@ pipeline {
 
         stage('Quality Gate Check') {
             steps {
-                script {
-                    echo 'Waiting for SonarQube Quality Gate result...'
-                }
                 echo 'Waiting for SonarQube Quality Gate result...'
                 timeout(time: 2, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
@@ -66,47 +57,26 @@ pipeline {
 
         stage('Deploy Application') {
             steps {
-                script {
-                    echo 'Deploying the application...'
-                }
                 echo 'Deploying the application...'
                 sh 'java -jar target/*.jar'
             }
         }
     }
 
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 2, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
+    post {
+        always {
+            echo 'Archiving results and artifacts...'
+            junit '**/target/surefire-reports/*.xml'
+            jacoco execPattern: 'target/jacoco.exec'
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
         }
 
-        post {
-            always {
-                script {
-                    echo 'Archiving results and artifacts...'
-                }
-                echo 'Archiving results and artifacts...'
-                junit '**/target/surefire-reports/*.xml'
-                jacoco execPattern: 'target/jacoco.exec'
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
-            }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
 
-            success {
-                script {
-                    echo 'Pipeline completed successfully!'
-            }
-                echo 'Pipeline completed successfully!'
-            }
-
-            failure {
-                script {
-                    echo 'Pipeline failed. Please check the logs.'
-                }
-                echo 'Pipeline failed. Please check the logs.'
-            }
+        failure {
+            echo 'Pipeline failed. Please check the logs.'
         }
     }
 }
