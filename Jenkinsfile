@@ -28,7 +28,7 @@ pipeline {
                 script {
                     echo 'Verifying Maven installation...'
                 }
-                sh 'mvnww -version' 
+                sh 'mvnw -version'
             }
         }
 
@@ -37,7 +37,7 @@ pipeline {
                 script {
                     echo 'Building the project using Maven...'
                 }
-                sh 'mvnww clean package -DskipTests' // Run Maven build, skipping tests
+                sh 'mvnw clean package -DskipTests' // Run Maven build, skipping tests
             }
         }
 
