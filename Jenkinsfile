@@ -25,11 +25,10 @@ pipeline {
             }
         }
 
-        stage('Run Unit Tests with JaCoCo Coverage') {
+        stage('Run Unit Tests with Debugging') {
             steps {
-                echo 'Running unit tests with JaCoCo coverage...'
-                sh './mvnw test -Dtestcontainers.ryuk.disabled=true'
-
+                echo 'Running unit tests with debugging enabled...'
+                sh './mvnw test -Dtestcontainers.ryuk.disabled=true -X'
             }
         }
 
@@ -80,6 +79,4 @@ pipeline {
             echo 'Pipeline failed. Please check the logs.'
         }
     }
-
-
 }
