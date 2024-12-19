@@ -1,12 +1,5 @@
 pipeline {
     agent any
-    stages {
-        stage('Verify Maven') {
-            steps {
-                sh 'mvn -version'
-            }
-        }
-    }
 
     environment {
         // Environment variables for SonarQube
@@ -19,6 +12,12 @@ pipeline {
     }
 
     stages {
+        stage('Verify Maven') {
+            steps {
+                sh 'mvn -version'
+            }
+        }
+
         stage('Checkout Code') {
             steps {
                 // Fetch the repository from GitHub
@@ -46,7 +45,7 @@ pipeline {
                 withSonarQubeEnv('SonarQube') { // Use the SonarQube server configured in Jenkins
                     sh """
                     sonar-scanner \
-                        -Dsonar.projectKey=eBankify \
+                        -Dsonar.projectKey=com.eBankify.api:eBankify \
                         -Dsonar.sources=src/main/java \
                         -Dsonar.tests=src/test/java \
                         -Dsonar.java.binaries=target/classes \
