@@ -55,19 +55,19 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock # To allow Jenkins to run Docker
 
       # Spring Boot Application
-      #app:
-      # build:
-      #context: .
-      #dockerfile: Dockerfile
-      #container_name: spring-boot-app
-      #depends_on:
-      #- postgres
-      #environment:
-      #SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ebankify_db
-      #SPRING_DATASOURCE_USERNAME: admin
-      #SPRING_DATASOURCE_PASSWORD: admin
-      #ports:
-      #- "8081:8080" # Map application port
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-boot-app
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ebankify_db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+    ports:
+      - "8081:8080" # Map application port
 networks:
   jenkins_network:
 volumes:
