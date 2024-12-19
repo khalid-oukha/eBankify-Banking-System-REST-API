@@ -1,5 +1,12 @@
 pipeline {
     agent any
+    stages {
+        stage('Verify Maven') {
+            steps {
+                sh 'mvn -version'
+            }
+        }
+    }
 
     environment {
         // Environment variables for SonarQube
