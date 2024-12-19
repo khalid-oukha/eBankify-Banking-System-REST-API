@@ -2,14 +2,8 @@ pipeline {
     agent any
 
     environment {
-        // Define the correct path for Maven if needed
-        PATH = "/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/Maven3/bin:${env.PATH}"
         SONAR_HOST_URL = 'http://localhost:9000'
         SONAR_AUTH_TOKEN = 'sqa_fb88955f1a313e55a6b2b1ecd54507ccb9c7e091'
-    }
-
-    tools {
-        maven 'Maven3' // Ensure Maven is configured in Jenkins under Global Tool Configuration
     }
 
     stages {
@@ -28,7 +22,7 @@ pipeline {
                 script {
                     echo 'Verifying Maven installation...'
                 }
-                sh 'mvnw -version'
+                sh 'mvn -version'
             }
         }
 
@@ -37,7 +31,7 @@ pipeline {
                 script {
                     echo 'Building the project using Maven...'
                 }
-                sh 'mvnw clean package -DskipTests' // Run Maven build, skipping tests
+                sh 'mvn clean package -DskipTests'
             }
         }
 
@@ -46,7 +40,7 @@ pipeline {
                 script {
                     echo 'Running unit tests with JaCoCo coverage...'
                 }
-                sh 'mvnw test' // Run unit tests
+                sh 'mvn test'
             }
         }
 
@@ -55,9 +49,9 @@ pipeline {
                 script {
                     echo 'Running SonarQube code analysis...'
                 }
-                withSonarQubeEnv('SonarQube') { // Use the SonarQube server configured in Jenkins
+                withSonarQubeEnv('SonarQube') {
                     sh """
-                    mvnw sonar:sonar \
+                    mvn sonar:sonar \
                         -Dsonar.projectKey=com.eBankify.api:eBankify \
                         -Dsonar.host.url=${SONAR_HOST_URL} \
                         -Dsonar.login=${SONAR_AUTH_TOKEN}
@@ -82,7 +76,7 @@ pipeline {
                 script {
                     echo 'Deploying the application...'
                 }
-                sh 'java -jar target/*.jar' // Deploy the built application
+                sh 'java -jar target/*.jar'
             }
         }
     }
@@ -92,9 +86,9 @@ pipeline {
             script {
                 echo 'Archiving results and artifacts...'
             }
-            junit '**/target/surefire-reports/*.xml' // Test results
-            jacoco execPattern: 'target/jacoco.exec' // JaCoCo report
-            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true // Archive the JAR
+            junit '**/target/surefire-reports/*.xml'
+            jacoco execPattern: 'target/jacoco.exec'
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
         }
 
         success {
