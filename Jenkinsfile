@@ -28,7 +28,7 @@ pipeline {
         stage('Run Unit Tests with Debugging') {
             steps {
                 echo 'Running unit tests with debugging enabled...'
-                sh './mvnw test -Dtest=!TestcontainersTests'
+                sh './mvnw test'
             }
         }
 
