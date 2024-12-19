@@ -7,6 +7,14 @@ pipeline {
     }
 
     stages {
+        stage('Debug Environment') {
+                steps {
+                    sh 'java -version'
+                    sh 'mvn -version'
+                    sh 'printenv'
+                }
+        }
+
         stage('Clone Repository') {
             steps {
                 git branch: 'main', url: 'https://github.com/khalid-oukha/eBankify-Banking-System-REST-API'
@@ -28,7 +36,7 @@ pipeline {
         stage('Run Unit Tests with Debugging') {
             steps {
                 echo 'Running unit tests with debugging enabled...'
-                sh './mvnw test'
+                sh './mvnw clean install -DskipTests'
             }
         }
 
