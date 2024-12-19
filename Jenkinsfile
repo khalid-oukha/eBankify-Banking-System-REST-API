@@ -17,15 +17,6 @@ pipeline {
             }
         }
 
-        stage('Verify Maven') {
-            steps {
-                script {
-                    echo 'Verifying Maven installation...'
-                }
-                sh 'mvn -version'
-            }
-        }
-
         stage('Build') {
             steps {
                 script {
