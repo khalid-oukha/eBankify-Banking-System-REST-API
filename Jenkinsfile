@@ -2,54 +2,62 @@ pipeline {
     agent any
 
     environment {
+        // Define the correct path for Maven if needed
         PATH = "/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/Maven3/bin:${env.PATH}"
         SONAR_HOST_URL = 'http://localhost:9000'
         SONAR_AUTH_TOKEN = 'sqa_fb88955f1a313e55a6b2b1ecd54507ccb9c7e091'
     }
 
     tools {
-        maven 'Maven3'
+        maven 'Maven3' // Ensure Maven is configured in Jenkins under Global Tool Configuration
     }
 
     stages {
-        // Checkout code from GitHub
         stage('Checkout Code') {
             steps {
-                echo 'Checking out code from GitHub...'
-                git branch: 'main', url: 'https://github.com/khalid-oukha/eBankify-Banking-System-REST-API'
+                script {
+                    echo 'Checking out code from GitHub...'
+                }
+                git branch: 'main',
+                    url: 'https://github.com/khalid-oukha/eBankify-Banking-System-REST-API'
             }
         }
 
         stage('Verify Maven') {
             steps {
-                echo 'Verifying Maven installation...'
-                sh 'mvn -version' // Verifies that Maven is properly configured and accessible
+                script {
+                    echo 'Verifying Maven installation...'
+                }
+                sh 'mvnww -version' 
             }
         }
 
-        // Build the project using Maven
         stage('Build') {
             steps {
-                echo 'Building the project using Maven...'
-                sh 'mvn clean package -DskipTests' // Clean and package the project, skipping tests
+                script {
+                    echo 'Building the project using Maven...'
+                }
+                sh 'mvnww clean package -DskipTests' // Run Maven build, skipping tests
             }
         }
 
-        // Run unit tests and collect JaCoCo coverage
         stage('Run Unit Tests with JaCoCo Coverage') {
             steps {
-                echo 'Running unit tests with JaCoCo coverage...'
-                sh 'mvn test' // Run unit tests and generate JaCoCo report
+                script {
+                    echo 'Running unit tests with JaCoCo coverage...'
+                }
+                sh 'mvnw test' // Run unit tests
             }
         }
 
-        // Run code analysis with SonarQube
         stage('Code Analysis with SonarQube') {
             steps {
-                echo 'Running SonarQube code analysis...'
+                script {
+                    echo 'Running SonarQube code analysis...'
+                }
                 withSonarQubeEnv('SonarQube') { // Use the SonarQube server configured in Jenkins
                     sh """
-                    mvn sonar:sonar \
+                    mvnw sonar:sonar \
                         -Dsonar.projectKey=com.eBankify.api:eBankify \
                         -Dsonar.host.url=${SONAR_HOST_URL} \
                         -Dsonar.login=${SONAR_AUTH_TOKEN}
@@ -58,40 +66,47 @@ pipeline {
             }
         }
 
-        // Wait for SonarQube Quality Gate result
         stage('Quality Gate Check') {
             steps {
-                echo 'Waiting for SonarQube Quality Gate result...'
+                script {
+                    echo 'Waiting for SonarQube Quality Gate result...'
+                }
                 timeout(time: 2, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true // Abort the pipeline if Quality Gate fails
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
 
-        // Deploy the application
         stage('Deploy Application') {
             steps {
-                echo 'Deploying the application...'
-                sh 'java -jar target/*.jar' // Deploy the application (run the generated JAR file)
+                script {
+                    echo 'Deploying the application...'
+                }
+                sh 'java -jar target/*.jar' // Deploy the built application
             }
         }
     }
 
-    // Post-actions for archiving results and handling outcomes
     post {
         always {
-            echo 'Archiving results and artifacts...'
-            junit '**/target/surefire-reports/*.xml' // Archive test results
-            jacoco execPattern: 'target/jacoco.exec' // Archive JaCoCo code coverage report
-            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true // Archive the final JAR file
+            script {
+                echo 'Archiving results and artifacts...'
+            }
+            junit '**/target/surefire-reports/*.xml' // Test results
+            jacoco execPattern: 'target/jacoco.exec' // JaCoCo report
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true // Archive the JAR
         }
 
         success {
-            echo 'Pipeline completed successfully!'
+            script {
+                echo 'Pipeline completed successfully!'
+            }
         }
 
         failure {
-            echo 'Pipeline failed. Please check the logs for details.'
+            script {
+                echo 'Pipeline failed. Please check the logs.'
+            }
         }
     }
 }
