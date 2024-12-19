@@ -1,0 +1,78 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: ebankify_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+
+
+  sonar-postgres:
+    image: postgres:15
+    container_name: sonar-postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar
+      - POSTGRES_DB=sonarqube
+    ports:
+      - "5433:5433"
+    networks:
+      - jenkins_network
+
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube
+    restart: always
+    depends_on:
+      - sonar-postgres
+    environment:
+      - SONAR_JDBC_URL=jdbc:postgresql://sonar-postgres:5432/sonarqube
+      - SONAR_JDBC_USERNAME=sonar
+      - SONAR_JDBC_PASSWORD=sonar
+    ports:
+      - "9000:9000"
+    networks:
+      - jenkins_network
+
+  # Jenkins Server
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: ebankify-jenkins
+    user: root
+    ports:
+      - "8090:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock # To allow Jenkins to run Docker
+
+      # Spring Boot Application
+      #app:
+      # build:
+      #context: .
+      #dockerfile: Dockerfile
+      #container_name: spring-boot-app
+      #depends_on:
+      #- postgres
+      #environment:
+      #SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ebankify_db
+      #SPRING_DATASOURCE_USERNAME: admin
+      #SPRING_DATASOURCE_PASSWORD: admin
+      #ports:
+      #- "8081:8080" # Map application port
+networks:
+  jenkins_network:
+volumes:
+  postgres_data:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  jenkins_home:

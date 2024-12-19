@@ -6,7 +6,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.3.5</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>com.eBankify.api</groupId>
     <artifactId>eBankify</artifactId>
@@ -28,6 +28,7 @@
     </scm>
     <properties>
         <java.version>17</java.version>
+        <sonar.login>sqa_fb88955f1a313e55a6b2b1ecd54507ccb9c7e091</sonar.login>
     </properties>
     <dependencies>
         <dependency>
@@ -100,7 +101,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-testcontainers</artifactId>
