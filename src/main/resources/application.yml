@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: eBankify
+
+  datasource:
+    url: jdbc:postgresql://host.docker.internal:5432/ebankify_db
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  liquibase:
+    enabled: false
+
+application:
+  security:
+    jwt:
+      secret-key: 69c89ad0cc680766e9eb096cc11442861cdb87f547069db2670cee3d4288ba80
+      expiration: 604800000
+      refresh-token:
+        expiration: 604800000
