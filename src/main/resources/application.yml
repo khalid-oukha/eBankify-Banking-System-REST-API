@@ -5,7 +5,7 @@ spring:
 
   # PostgreSQL Database Configuration
   datasource:
-    url: jdbc:postgresql://localhost:5432/ebankify_db
+    url: jdbc:postgresql://host.docker.internal:5432/ebankify_db
     username: admin
     password: admin
     driver-class-name: org.postgresql.Driver
