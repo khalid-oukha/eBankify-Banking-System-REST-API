@@ -19,7 +19,6 @@ spring:
 
   liquibase:
     enabled: false
-
 application:
   security:
     jwt:
@@ -27,3 +26,5 @@ application:
       expiration: 604800000
       refresh-token:
         expiration: 604800000
+server:
+  port: 8081
