@@ -29,7 +29,7 @@
     <properties>
         <java.version>17</java.version>
         <sonar.projectKey>com.eBankify.api:eBankify</sonar.projectKey>
-        <sonar.token>sqa_fb88955f1a313e55a6b2b1ecd54507ccb9c7e091</sonar.token>
+        <sonar.token>${env.SONAR_TOKEN}</sonar.token>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
     <dependencies>

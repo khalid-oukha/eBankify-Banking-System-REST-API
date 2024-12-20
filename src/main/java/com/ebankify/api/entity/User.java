@@ -38,13 +38,15 @@ public class User implements UserDetails {
     private int age;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @JsonIgnore
+    @Transient
     private List<BankAccount> accounts;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Transient
     private List<Loan> loans;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Transient
     private List<Invoice> invoices;
 
     @Column(name = "created_at", nullable = false, updatable = false)
