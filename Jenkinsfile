@@ -45,7 +45,7 @@ pipeline {
                 echo 'Running SonarQube code analysis...'
                 withSonarQubeEnv('SonarQube') {
                     sh """
-                    ./mvnw sonar:sonar \
+                    ./mvn sonar:sonar \
                         -Dsonar.projectKey=com.eBankify.api:eBankify \
                         -Dsonar.host.url=${SONAR_HOST_URL} \
                         -Dsonar.login=${SONAR_AUTH_TOKEN}
