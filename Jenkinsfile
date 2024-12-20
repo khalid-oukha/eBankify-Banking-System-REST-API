@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        SONAR_HOST_URL = 'http://localhost:9000'
-        SONAR_AUTH_TOKEN = 'sqa_fb88955f1a313e55a6b2b1ecd54507ccb9c7e091'
-    }
-
     stages {
         stage('Debug Environment') {
                 steps {
@@ -33,23 +28,17 @@ pipeline {
             }
         }
 
-        stage('Run Unit Tests with Debugging') {
+        stage('Run Unit Tests with Coverage') {
             steps {
-                echo 'Running unit tests with debugging enabled...'
-                sh './mvnw clean install'
+                echo 'Running unit tests and generating coverage reports...'
+                sh './mvnw clean verify'
             }
         }
 
-        stage('Code Analysis with SonarQube') {
+        stage('SonarQube Analysis') {
             steps {
-                echo 'Running SonarQube code analysis...'
                 withSonarQubeEnv('SonarQube') {
-                    sh """
-                    ./mvn sonar:sonar \
-                        -Dsonar.projectKey=com.eBankify.api:eBankify \
-                        -Dsonar.host.url=${SONAR_HOST_URL} \
-                        -Dsonar.login=${SONAR_AUTH_TOKEN}
-                    """
+                     sh './mvnw sonar:sonar -Dsonar.host.url=http://sonarqube:9000'
                 }
             }
         }
