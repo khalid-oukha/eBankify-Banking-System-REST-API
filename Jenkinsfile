@@ -37,11 +37,13 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
+                echo 'Running SonarQube analysis...'
                 withSonarQubeEnv('SonarQube') {
-                     sh './mvnw sonar:sonar'
+                    sh './mvnw sonar:sonar -Dsonar.verbose=true'
                 }
             }
         }
+
 
         stage('Quality Gate Check') {
             steps {
