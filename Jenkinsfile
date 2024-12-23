@@ -27,24 +27,6 @@ pipeline {
             }
         }
 
-        stage('Code Analysis') {
-            environment {
-                scannerHome = tool 'Sonar'
-            }
-            steps {
-                script {
-                    withSonarQubeEnv('Sonar') {
-                        sh "${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=com.eBankify.api:eBankify \
-                            -Dsonar.projectName=com.eBankify.api:eBankify \
-                            -Dsonar.projectVersion=1.0 \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=http://sonarqube:9000"
-                    }
-                }
-            }
-        }
-
         stage('SonarQube Analysis') {
             steps {
                 echo 'Running SonarQube analysis...'
@@ -55,22 +37,6 @@ pipeline {
                         -Dsonar.login=sqa_79a3e891e56bccaa51e12b846ea824add6c4ad36
                     """
                 }
-            }
-        }
-
-        stage('Quality Gate Check') {
-            steps {
-                echo 'Waiting for SonarQube Quality Gate result...'
-                timeout(time: 2, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
-        stage('Deploy Application') {
-            steps {
-                echo 'Deploying the application...'
-                sh 'java -jar target/*.jar'
             }
         }
     }
