@@ -2,14 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Debug Environment') {
-            steps {
-                sh 'java -version'
-                sh 'mvn -version'
-                sh 'printenv'
-            }
-        }
-
         stage('Clone Repository') {
             steps {
                 git branch: 'main', url: 'https://github.com/khalid-oukha/eBankify-Banking-System-REST-API'
@@ -49,6 +41,19 @@ pipeline {
                             -Dsonar.sources=. \
                             -Dsonar.host.url=http://sonarqube:9000"
                     }
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                echo 'Running SonarQube analysis...'
+                script {
+                    sh """
+                        ./mvnw clean verify sonar:sonar \\
+                        -Dsonar.host.url=http://sonarqube:9000 \\
+                        -Dsonar.login=sqp_24f677f8258865ecd0ea3f5be2d186c2393d7f60
+                    """
                 }
             }
         }

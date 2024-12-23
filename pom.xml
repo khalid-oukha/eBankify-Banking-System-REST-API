@@ -30,7 +30,7 @@
         <java.version>17</java.version>
         <sonar.projectKey>com.eBankify.api:eBankify</sonar.projectKey>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
-        <sonar.token>sqa_fb88955f1a313e55a6b2b1ecd54507ccb9c7e091</sonar.token>
+        <sonar.token>sqa_79a3e891e56bccaa51e12b846ea824add6c4ad36</sonar.token>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
     <dependencies>
