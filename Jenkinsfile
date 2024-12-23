@@ -35,13 +35,22 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                echo 'Running SonarQube analysis...'
-                withSonarQubeEnv('SonarQube') {
-                    sh './mvnw sonar:sonar -Dsonar.verbose=true'
-                }
-            }
+        stage('Code Analysis')
+        {
+                    environment {
+                        scannerHome = tool 'Sonar'
+                    }
+                    steps {
+                        script {
+                            withSonarQubeEnv('Sonar') {
+                                sh "${scannerHome}/bin/sonar-scanner \
+                                    -Dsonar.projectKey=com.eBankify.api:eBankify \
+                                    -Dsonar.projectName=com.eBankify.api:eBankify \
+                                    -Dsonar.projectVersion=1.0 \
+                                    -Dsonar.sources=."
+                            }
+                        }
+                    }
         }
 
 
