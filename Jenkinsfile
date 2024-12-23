@@ -36,23 +36,23 @@ pipeline {
         }
 
         stage('Code Analysis') {
-            environment {
-                scannerHome = tool 'Sonar'
-            }
-            steps {
-                script {
-                    withSonarQubeEnv('eBankify') {
-                        sh "${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=com.eBankify.api:eBankify \
-                            -Dsonar.projectName=com.eBankify.api:eBankify \
-                            -Dsonar.projectVersion=1.0 \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=http://sonarqube:9000"
+                    environment {
+                        scannerHome = tool 'Sonar'
+                    }
+                    steps {
+                        script {
+                            withSonarQubeEnv('Sonar') {
+                                sh "${scannerHome}/bin/sonar-scanner \
+                                    -Dsonar.projectKey=com.eBankify.api:eBankify \
+                                    -Dsonar.projectName=com.eBankify.api:eBankify \
+                                    -Dsonar.projectVersion=1.0 \
+                                    -Dsonar.sources=.
+                                    -Dsonar.host.url=http://sonarqube:9000"
+                            }
+                        }
                     }
                 }
             }
-        }
-
 
 
         stage('Quality Gate Check') {
