@@ -1,5 +1,4 @@
 services:
-  # PostgreSQL Database
   postgres:
     image: postgres:latest
     container_name: postgres
@@ -9,10 +8,8 @@ services:
       POSTGRES_DB: ebankify_db
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./init-scripts:/docker-entrypoint-initdb.d
-
+    networks:
+      - jenkins_network
 
   sonar-postgres:
     image: postgres:15
@@ -42,7 +39,6 @@ services:
     networks:
       - jenkins_network
 
-  # Jenkins Server
   jenkins:
     image: jenkins/jenkins:lts
     container_name: ebankify-jenkins
@@ -52,9 +48,10 @@ services:
       - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock # To allow Jenkins to run Docker
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - jenkins_network
 
-      # Spring Boot Application
   app:
     build:
       context: .
@@ -67,12 +64,15 @@ services:
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
     ports:
-      - "8081:8080" # Map application port
+      - "8081:8080"
+    networks:
+      - jenkins_network
+
 networks:
   jenkins_network:
 volumes:
   postgres_data:
-  sonarqube_data:
-  sonarqube_extensions:
-  sonarqube_logs:
   jenkins_home:
+  sonarqube_data:
+  sonarqube_logs:
+  sonarqube_extensions:
