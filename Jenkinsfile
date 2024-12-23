@@ -3,11 +3,11 @@ pipeline {
 
     stages {
         stage('Debug Environment') {
-                steps {
-                    sh 'java -version'
-                    sh 'mvn -version'
-                    sh 'printenv'
-                }
+            steps {
+                sh 'java -version'
+                sh 'mvn -version'
+                sh 'printenv'
+            }
         }
 
         stage('Clone Repository') {
@@ -36,24 +36,22 @@ pipeline {
         }
 
         stage('Code Analysis') {
-                    environment {
-                        scannerHome = tool 'Sonar'
-                    }
-                    steps {
-                        script {
-                            withSonarQubeEnv('Sonar') {
-                                sh "${scannerHome}/bin/sonar-scanner \
-                                    -Dsonar.projectKey=com.eBankify.api:eBankify \
-                                    -Dsonar.projectName=com.eBankify.api:eBankify \
-                                    -Dsonar.projectVersion=1.0 \
-                                    -Dsonar.sources=.
-                                    -Dsonar.host.url=http://sonarqube:9000"
-                            }
-                        }
+            environment {
+                scannerHome = tool 'Sonar'
+            }
+            steps {
+                script {
+                    withSonarQubeEnv('Sonar') {
+                        sh "${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=com.eBankify.api:eBankify \
+                            -Dsonar.projectName=com.eBankify.api:eBankify \
+                            -Dsonar.projectVersion=1.0 \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://sonarqube:9000"
                     }
                 }
             }
-
+        }
 
         stage('Quality Gate Check') {
             steps {
