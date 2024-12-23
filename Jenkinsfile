@@ -52,7 +52,7 @@ pipeline {
                     sh """
                         ./mvnw clean verify sonar:sonar \\
                         -Dsonar.host.url=http://sonarqube:9000 \\
-                        -Dsonar.login=sqp_24f677f8258865ecd0ea3f5be2d186c2393d7f60
+                        -Dsonar.login=sqa_79a3e891e56bccaa51e12b846ea824add6c4ad36
                     """
                 }
             }
