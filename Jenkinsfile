@@ -42,19 +42,6 @@ pipeline {
     }
 
     post {
-        always {
-            echo 'Archiving results and artifacts...'
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                junit '**/target/surefire-reports/*.xml'
-            }
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                jacoco execPattern: 'target/jacoco.exec'
-            }
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
-            }
-        }
-
         success {
             echo 'Pipeline completed successfully!'
         }
