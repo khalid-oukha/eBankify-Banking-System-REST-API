@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -67,6 +68,23 @@ public class UserController {
         try {
             userService.deleteUser(userId);
             return ApiResponse.noContent();
+        } catch (UserNotFoundException e) {
+            return ApiResponse.notFound();
+        }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDTO> getAuthenticatedUser(Authentication authentication) {
+        String username = authentication.getName();
+        return ApiResponse.ok(UserResponseDTO.fromUser(userService.findByEmail(username)));
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserResponseDTO> getUserByEmail(@Valid @PathVariable String email) {
+        try {
+            User user = userService.findByEmail(email);
+            UserResponseDTO userResponseDTO = UserResponseDTO.fromUser(user);
+            return ApiResponse.ok(userResponseDTO);
         } catch (UserNotFoundException e) {
             return ApiResponse.notFound();
         }
