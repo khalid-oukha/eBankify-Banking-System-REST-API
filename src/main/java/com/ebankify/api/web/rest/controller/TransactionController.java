@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/transactions")
 public class TransactionController {
@@ -22,6 +24,12 @@ public class TransactionController {
     public TransactionController(TransactionService transactionService, TransactionProcessingService transactionProcessingService) {
         this.transactionService = transactionService;
         this.transactionProcessingService = transactionProcessingService;
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<TransactionResponseDTO>> getAllTransactions() {
+        List<TransactionResponseDTO> transactions = transactionService.findAll();
+        return ApiResponse.ok(transactions);
     }
 
     @PostMapping()

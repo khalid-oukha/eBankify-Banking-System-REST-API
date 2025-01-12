@@ -13,7 +13,11 @@ import java.util.UUID;
 
 public interface BankAccountService {
 
+    List<BankAccountResponseDto> findAll();
+
     Optional<BankAccount> findById(Long id);
+
+    void deleteBankAccountById(Long id);
 
     BankAccountDetailsDTO findBankAccountDetailsById(Long id);
 
@@ -26,6 +30,10 @@ public interface BankAccountService {
     List<BankAccountResponseDto> getBankAccountsByUserId(Long userId);
 
     Boolean updateBankAccountBalance(UUID accountNumber, Double balance);
+
+    BankAccountResponseDto withdrawFromBankAccount(UUID accountNumber, Double amount);
+
+    BankAccountResponseDto depositToBankAccount(UUID accountNumber, Double amount);
 
     BankAccountResponseDto updateBankAccountStatus(Long id, String status);
 

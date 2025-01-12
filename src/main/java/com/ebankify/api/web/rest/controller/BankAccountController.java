@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -27,6 +28,20 @@ public class BankAccountController {
     @Autowired
     public BankAccountController(BankAccountService bankAccountService) {
         this.bankAccountService = bankAccountService;
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/admin/accounts")
+    public ResponseEntity<List<BankAccountResponseDto>> getAllBankAccounts() {
+        List<BankAccountResponseDto> bankAccounts = bankAccountService.findAll();
+        return ApiResponse.ok(bankAccounts);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/admin/accounts/{bankAccountId}")
+    public ResponseEntity<Void> deleteBankAccount(@PathVariable Long bankAccountId) {
+        bankAccountService.deleteBankAccountById(bankAccountId);
+        return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -90,4 +105,35 @@ public class BankAccountController {
         }
     }
 
+    @PutMapping("/bank-accounts/{accountNumber}/withdraw")
+    public ResponseEntity<BankAccountResponseDto> withdrawFromBankAccount(
+            @PathVariable UUID accountNumber,
+            @RequestParam Double amount) {
+        try {
+            return ApiResponse.ok(bankAccountService.withdrawFromBankAccount(accountNumber, amount));
+        } catch (Exception e) {
+            return ApiResponse.badRequest(e.getMessage());
+        }
+    }
+
+    @PutMapping("/bank-accounts/{accountNumber}/deposit")
+    public ResponseEntity<BankAccountResponseDto> depositToBankAccount(
+            @PathVariable UUID accountNumber,
+            @RequestParam Double amount) {
+        try {
+            return ApiResponse.ok(bankAccountService.depositToBankAccount(accountNumber, amount));
+        } catch (Exception e) {
+            return ApiResponse.badRequest(e.getMessage());
+        }
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/bank-accounts/my-account")
+    public ResponseEntity<List<BankAccountResponseDto>> getMyBankAccounts() {
+        User currentUser = UserUtils.getCurrentUser();
+
+        List<BankAccountResponseDto> userBankAccounts = bankAccountService.getBankAccountsByUserId(currentUser.getId());
+
+        return ApiResponse.ok(userBankAccounts);
+    }
 }

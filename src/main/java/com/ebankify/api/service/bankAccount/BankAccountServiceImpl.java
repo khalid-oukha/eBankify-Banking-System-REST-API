@@ -33,6 +33,20 @@ public class BankAccountServiceImpl implements BankAccountService {
         this.transactionService = transactionService;
     }
 
+    @Override
+    public List<BankAccountResponseDto> findAll() {
+        return bankAccountRepository.findAll().stream()
+                .map(bankAccount -> BankAccountResponseDto.fromBankAccountAndUser(bankAccount, bankAccount.getUser()))
+                .toList();
+    }
+
+    @Override
+    public void deleteBankAccountById(Long id) {
+        BankAccount bankAccount = bankAccountRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Bank account not found"));
+        bankAccountRepository.delete(bankAccount);
+    }
+
     public Optional<BankAccount> findById(Long id) {
         return bankAccountRepository.findById(id);
     }
@@ -103,6 +117,27 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
+    public BankAccountResponseDto withdrawFromBankAccount(UUID accountNumber, Double amount) {
+        BankAccount bankAccount = bankAccountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Bank account not found"));
+        if (bankAccount.getBalance() < amount) {
+            throw new IllegalArgumentException("Not enough balance");
+        }
+        bankAccount.setBalance(bankAccount.getBalance() - amount);
+        bankAccountRepository.save(bankAccount);
+        return BankAccountResponseDto.fromBankAccountAndUser(bankAccount, bankAccount.getUser());
+    }
+
+    @Override
+    public BankAccountResponseDto depositToBankAccount(UUID accountNumber, Double amount) {
+        BankAccount bankAccount = bankAccountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Bank account not found"));
+        bankAccount.setBalance(bankAccount.getBalance() + amount);
+        bankAccountRepository.save(bankAccount);
+        return BankAccountResponseDto.fromBankAccountAndUser(bankAccount, bankAccount.getUser());
+    }
+
+    @Override
     public BankAccountResponseDto updateBankAccountStatus(Long id, String status) {
         BankAccount bankAccount = bankAccountRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Bank account not found"));
@@ -110,4 +145,6 @@ public class BankAccountServiceImpl implements BankAccountService {
         bankAccountRepository.save(bankAccount);
         return BankAccountResponseDto.fromBankAccountAndUser(bankAccount, bankAccount.getUser());
     }
+
+
 }

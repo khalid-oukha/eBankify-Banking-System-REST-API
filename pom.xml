@@ -155,6 +155,7 @@
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>0.8.12</version>
         </dependency>
+        
     </dependencies>
 
     <build>

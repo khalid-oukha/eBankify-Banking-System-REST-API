@@ -37,8 +37,12 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ApiResponse.ok(userService.getAllUsers());
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        List<UserResponseDTO> users = userService.getAllUsers()
+                .stream()
+                .map(UserResponseDTO::fromUser)
+                .toList();
+        return ApiResponse.ok(users);
     }
 
     @GetMapping("/{userId}")

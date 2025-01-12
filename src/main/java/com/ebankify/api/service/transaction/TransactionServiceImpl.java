@@ -17,9 +17,13 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
 
-    @Autowired
     public TransactionServiceImpl(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
+    }
+
+    @Override
+    public List<TransactionResponseDTO> findAll() {
+        return transactionRepository.findAll().stream().map(TransactionResponseDTO::transactionToDTO).toList();
     }
 
     @Override
