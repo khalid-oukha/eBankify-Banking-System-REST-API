@@ -1,6 +1,7 @@
 package com.ebankify.api.web.rest.controller;
 
 import com.ebankify.api.commons.ApiResponse;
+import com.ebankify.api.entity.Transaction;
 import com.ebankify.api.service.TransactionProcessing.TransactionProcessingService;
 import com.ebankify.api.service.transaction.TransactionService;
 import com.ebankify.api.web.dto.transaction.TransactionRequestDTO;
@@ -12,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/transactions")
@@ -30,6 +32,16 @@ public class TransactionController {
     public ResponseEntity<List<TransactionResponseDTO>> getAllTransactions() {
         List<TransactionResponseDTO> transactions = transactionService.findAll();
         return ApiResponse.ok(transactions);
+    }
+
+    @GetMapping("/{transactionId}")
+    public ResponseEntity<TransactionResponseDTO> getTransactionById(@PathVariable Long transactionId) {
+        try {
+            Transaction transaction = transactionService.findById(transactionId);
+            return ApiResponse.ok(TransactionResponseDTO.transactionToDTO(transaction));
+        } catch (Exception e) {
+            return ApiResponse.badRequest(e.getMessage());
+        }
     }
 
     @PostMapping()
@@ -59,6 +71,16 @@ public class TransactionController {
         try {
             TransactionResponseDTO rejectedTransaction = transactionProcessingService.rejectTransaction(transactionId);
             return ApiResponse.ok(rejectedTransaction);
+        } catch (Exception e) {
+            return ApiResponse.badRequest(e.getMessage());
+        }
+    }
+
+    @GetMapping("/account/{accountId}")
+    public ResponseEntity<Map<String, List<TransactionResponseDTO>>> getTransactionsByAccount(@PathVariable Long accountId) {
+        try {
+            Map<String, List<TransactionResponseDTO>> transactions = transactionProcessingService.findAllByAccountFromOrAccountTo(accountId);
+            return ApiResponse.ok(transactions);
         } catch (Exception e) {
             return ApiResponse.badRequest(e.getMessage());
         }

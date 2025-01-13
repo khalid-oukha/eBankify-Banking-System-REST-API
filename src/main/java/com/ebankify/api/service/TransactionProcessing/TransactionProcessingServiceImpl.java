@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class TransactionProcessingServiceImpl implements TransactionProcessingService {
     private final BankAccountService bankAccountService;
@@ -87,5 +90,10 @@ public class TransactionProcessingServiceImpl implements TransactionProcessingSe
     public void updateCreditAccountBalance(BankAccount accountTo, double amount) {
         accountTo.setBalance(accountTo.getBalance() + amount);
         bankAccountService.updateBankAccountBalance(accountTo.getAccountNumber(), accountTo.getBalance());
+    }
+
+    @Override
+    public Map<String, List<TransactionResponseDTO>> findAllByAccountFromOrAccountTo(Long accountId) {
+        return transactionService.findAllByAccountFromOrAccountTo(accountId);
     }
 }

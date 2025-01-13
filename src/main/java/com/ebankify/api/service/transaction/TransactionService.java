@@ -5,6 +5,7 @@ import com.ebankify.api.entity.enums.TransactionType;
 import com.ebankify.api.web.dto.transaction.TransactionResponseDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TransactionService {
 
@@ -21,4 +22,6 @@ public interface TransactionService {
     TransactionResponseDTO updateTransaction(Transaction transaction);
 
     double calculateFee(TransactionType transactionType, double amount);
+
+    Map<String, List<TransactionResponseDTO>> findAllByAccountFromOrAccountTo(Long accountId);
 }
